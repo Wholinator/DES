@@ -1,7 +1,7 @@
 
 public class BitString {
 	private Bit[] bits;
-	public int length;
+	private int length;
 	
 	//bit array constructor
 	public BitString(Bit[] bits) {

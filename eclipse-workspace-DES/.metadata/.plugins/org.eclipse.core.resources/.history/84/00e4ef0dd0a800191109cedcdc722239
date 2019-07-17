@@ -84,16 +84,7 @@ public class DES {
 
 		BitString p1_Key = new BitString(56);
 		
-		for (int i = 0; i < p1_Key.length; i++) {
-			//retrieve the scrambled bit
-			int getIndex = initial_permutation[i];
-			Bit bit = bits.getBits()[getIndex];
-			
-			//place scrambled bit in permuted key
-			p1_Key.setBit(i, bit.getValue());
-		}
-		
-		
+		for (int i = 0; i < p1_Key.length)
 		
 		return null;
 		

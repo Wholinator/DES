@@ -1,12 +1,11 @@
 
 public class BitString {
 	private Bit[] bits;
-	public int length;
+	
 	
 	//bit array constructor
 	public BitString(Bit[] bits) {
 		setBits(bits);
-		this.length = bits.length;
 	}
 	
 	public BitString(byte[] bytes) {
@@ -32,14 +31,10 @@ public class BitString {
 				byteNum++;
 			}
 		}
-		
-		this.length = bits.length;
 	}
 	
 	public BitString(int length) {
 		bits = initBits(new Bit[length]);
-		
-		this.length = length;
 	}
 	
 	private Bit[] initBits(Bit[] b) {
