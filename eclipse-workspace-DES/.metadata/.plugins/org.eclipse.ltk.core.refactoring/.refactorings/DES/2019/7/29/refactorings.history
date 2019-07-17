@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;DES.getKey()&apos; to &apos;genKey&apos;&#x0D;&#x0A;- Original project: &apos;DES&apos;&#x0D;&#x0A;- Original element: &apos;DES.getKey()&apos;&#x0D;&#x0A;- Renamed element: &apos;DES.genKey()&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;getKey&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{DES.java[DES~getKey" name="genKey" references="true" stamp="1563307826763" version="1.0"/>
+</session>

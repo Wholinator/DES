@@ -1,0 +1,15 @@
+
+public class DES {
+	private String key;
+	
+	public DES(String key) {
+		this.key = key;
+	}
+	
+	public DES() {
+		//TODO: generate key
+		this.key = "";
+	}
+	
+	
+}

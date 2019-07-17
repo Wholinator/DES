@@ -1,0 +1,36 @@
+import java.util.Random;
+
+
+public class DES {
+	private String key;
+	private Random rand;
+	
+	public DES(String key) {
+		this.key = key;
+		rand = new Random(System.currentTimeMillis());
+	}
+	
+	public DES() {
+		//TODO: generate key
+		this.key = "";
+		rand = new Random(System.currentTimeMillis());
+	}
+	
+	
+	
+	
+	public byte[] getKey() {
+		byte[] bKey = new byte[7];
+		rand.nextBytes(bKey);
+		
+		return bKey;
+	}
+	
+	public String encrypt(String plaintext) {
+		
+		
+		
+		
+		return plaintext;
+	}
+}

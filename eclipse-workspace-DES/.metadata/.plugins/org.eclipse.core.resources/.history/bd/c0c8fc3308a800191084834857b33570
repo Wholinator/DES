@@ -1,0 +1,55 @@
+import java.util.Random;
+
+
+public class DES {
+	private byte[] key;
+	private Random rand;
+	
+	public DES(byte[] key) {
+		setKey(key);
+		rand = new Random(System.currentTimeMillis());
+	}
+	
+	public DES(String key) {
+		byte[] b = key.getBytes();
+		if (b.length == 7) {
+			setKey(b);
+		} else {
+			System.out.println("Key not valid length: Generating new key");
+			setKey(genKey());
+		}
+	}
+	
+	public DES() {
+		setKey(genKey());
+	}
+	
+	
+	
+	//generates random 64 bit key
+	public byte[] genKey() {
+		byte[] bKey = new byte[8];
+		rand.nextBytes(bKey);
+		
+		return bKey;
+	}
+	
+	
+	//encrypts plaintext
+	public String encrypt(String plaintext) {
+		
+		
+		return plaintext;
+	}
+
+	
+	//Getter: key
+	public byte[] getKey() {
+		return key;
+	}
+
+	//Setter: key
+	public void setKey(byte[] key) {
+		this.key = key;
+	}
+}
