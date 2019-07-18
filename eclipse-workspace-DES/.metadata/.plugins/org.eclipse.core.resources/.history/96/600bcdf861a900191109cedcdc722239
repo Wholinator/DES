@@ -38,17 +38,10 @@ public class DES {
 	
 	
 	//encrypts plaintext
-	@SuppressWarnings("unused")
 	public String encrypt(String plaintext) {
 		byte[][] blocks = getBlocks(plaintext);
 		
 		BitString[] keySchedule = getKeySchedule(key);
-		
-		System.out.println("Key Schedule: ");
-		
-		for (BitString b : keySchedule) {
-			System.out.println(b.toString());
-		}
 		
 		return plaintext;
 	}
@@ -76,7 +69,7 @@ public class DES {
 		return blocks;
 	}
 	
-	
+	@SuppressWarnings("unused")
 	public BitString[] getKeySchedule(byte[] key) {
 		int[] initial_permutation = {57, 49, 41, 33, 25, 17,  9,
 									 1,  58, 50, 42, 34, 26, 18,
@@ -141,7 +134,7 @@ public class DES {
 			BitString permutedKey = new BitString(48);
 			
 			for (int j = 0; j < permutedKey.length; j++) {
-				int index = second_permutation[j] - 1;
+				int index = second_permutation[j];
 				
 				permutedKey.setBit(j, tempKey.getBit(index));
 			}

@@ -141,7 +141,7 @@ public class DES {
 			BitString permutedKey = new BitString(48);
 			
 			for (int j = 0; j < permutedKey.length; j++) {
-				int index = second_permutation[j] - 1;
+				int index = second_permutation[j];
 				
 				permutedKey.setBit(j, tempKey.getBit(index));
 			}

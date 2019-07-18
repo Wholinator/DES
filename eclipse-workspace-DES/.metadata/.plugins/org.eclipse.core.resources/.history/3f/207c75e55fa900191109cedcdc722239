@@ -85,21 +85,6 @@ public class BitString {
 		return bitString;
 	}
 	
-	public BitString concat(BitString bitString) {
-		
-		BitString returnBits = new BitString(length + bitString.length);
-		
-		for (int i = 0; i < length; i++) {
-			returnBits.setBit(i, getBit(i));
-		}
-		
-		for (int i = 0; i < bitString.length; i++) {
-			returnBits.setBit(i + length, bitString.getBit(i));
-		}
-		
-		return returnBits;
-	}
-	
 	
 //	public static BitString leftShift(BitString bitString) {
 //		//store first bit to wrap to back

@@ -50,70 +50,20 @@ public class BitString {
 		return b;
 	}
 	
-	public void leftShift() {
+	public static BitString leftShift(BitString bitString) {
 		//store first bit to wrap to back
-		Bit firstBit = getBits()[0];
+		Bit firstBit = bitString.getBits()[0];
 		
 		//move each bit to index 1 lower
-		for (int i = 1; i < length; i++) {
-			setBit(i - 1, getBit(i));
+		for (int i = 1; i < bitString.length; i++) {
+			bitString.setBit(i - 1, bitString.getBit(i));
 		}
 		//wrap first bit to the back
-		setBit(length - 1, firstBit);
-	}
+		bitString.setBit(bitString.length - 1, firstBit);
 	
-	public void rightShift() {
-		Bit lastBit = getBits()[length - 1];
-		
-		for (int i = length-2; i >= 0; i--) {
-			setBit(i+1, getBit(i));
-		}
-		
-		setBit(0, lastBit);
-	}
-	
-	
-	public BitString subString(int start, int end) {
-		int length = end - start;
-		
-		BitString bitString = new BitString(length);
-		
-		for (int i = start; i < end; i++) {
-			bitString.setBit(i - start, getBit(i));
-		}
-		
 		return bitString;
 	}
 	
-	public BitString concat(BitString bitString) {
-		
-		BitString returnBits = new BitString(length + bitString.length);
-		
-		for (int i = 0; i < length; i++) {
-			returnBits.setBit(i, getBit(i));
-		}
-		
-		for (int i = 0; i < bitString.length; i++) {
-			returnBits.setBit(i + length, bitString.getBit(i));
-		}
-		
-		return returnBits;
-	}
-	
-	
-//	public static BitString leftShift(BitString bitString) {
-//		//store first bit to wrap to back
-//		Bit firstBit = bitString.getBits()[0];
-//		
-//		//move each bit to index 1 lower
-//		for (int i = 1; i < bitString.length; i++) {
-//			bitString.setBit(i - 1, bitString.getBit(i));
-//		}
-//		//wrap first bit to the back
-//		bitString.setBit(bitString.length - 1, firstBit);
-//	
-//		return bitString;
-//	}
 
 	public Bit[] getBits() {
 		return bits;

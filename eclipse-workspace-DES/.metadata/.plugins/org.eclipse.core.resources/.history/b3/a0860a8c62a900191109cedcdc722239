@@ -44,12 +44,6 @@ public class DES {
 		
 		BitString[] keySchedule = getKeySchedule(key);
 		
-		System.out.println("Key Schedule: ");
-		
-		for (BitString b : keySchedule) {
-			System.out.println(b.toString());
-		}
-		
 		return plaintext;
 	}
 	
@@ -141,7 +135,7 @@ public class DES {
 			BitString permutedKey = new BitString(48);
 			
 			for (int j = 0; j < permutedKey.length; j++) {
-				int index = second_permutation[j] - 1;
+				int index = second_permutation[j];
 				
 				permutedKey.setBit(j, tempKey.getBit(index));
 			}

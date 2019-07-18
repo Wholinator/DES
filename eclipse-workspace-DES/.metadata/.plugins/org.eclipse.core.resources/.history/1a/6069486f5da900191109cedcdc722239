@@ -65,7 +65,7 @@ public class BitString {
 	public void rightShift() {
 		Bit lastBit = getBits()[length - 1];
 		
-		for (int i = length-2; i >= 0; i--) {
+		for (int i = length-1; i >= 0; i--) {
 			setBit(i+1, getBit(i));
 		}
 		
@@ -73,32 +73,7 @@ public class BitString {
 	}
 	
 	
-	public BitString subString(int start, int end) {
-		int length = end - start;
-		
-		BitString bitString = new BitString(length);
-		
-		for (int i = start; i < end; i++) {
-			bitString.setBit(i - start, getBit(i));
-		}
-		
-		return bitString;
-	}
 	
-	public BitString concat(BitString bitString) {
-		
-		BitString returnBits = new BitString(length + bitString.length);
-		
-		for (int i = 0; i < length; i++) {
-			returnBits.setBit(i, getBit(i));
-		}
-		
-		for (int i = 0; i < bitString.length; i++) {
-			returnBits.setBit(i + length, bitString.getBit(i));
-		}
-		
-		return returnBits;
-	}
 	
 	
 //	public static BitString leftShift(BitString bitString) {

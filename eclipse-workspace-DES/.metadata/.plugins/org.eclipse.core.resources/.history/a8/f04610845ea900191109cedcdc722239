@@ -38,17 +38,10 @@ public class DES {
 	
 	
 	//encrypts plaintext
-	@SuppressWarnings("unused")
 	public String encrypt(String plaintext) {
 		byte[][] blocks = getBlocks(plaintext);
 		
-		BitString[] keySchedule = getKeySchedule(key);
-		
-		System.out.println("Key Schedule: ");
-		
-		for (BitString b : keySchedule) {
-			System.out.println(b.toString());
-		}
+		byte[][] keySchedule = getKeySchedule(key);
 		
 		return plaintext;
 	}
@@ -76,8 +69,8 @@ public class DES {
 		return blocks;
 	}
 	
-	
-	public BitString[] getKeySchedule(byte[] key) {
+	@SuppressWarnings("unused")
+	public byte[][] getKeySchedule(byte[] key) {
 		int[] initial_permutation = {57, 49, 41, 33, 25, 17,  9,
 									 1,  58, 50, 42, 34, 26, 18,
 									 10, 2,  59, 51, 43, 35, 27,
@@ -86,15 +79,6 @@ public class DES {
 									 7,  62, 54, 46, 38, 30, 22,
 									 14, 6,  61, 53, 45, 37, 29,
 									 21, 13, 5,  28, 20, 12, 4};
-		
-		int[] second_permutation = {14, 17, 11, 24, 1,  5,
-									3,  28, 15, 6,  21, 10,
-									23, 19, 12, 4,  26, 8,
-									16, 7,  27, 20, 13, 2,
-									41, 52, 31, 37, 47, 55,
-									30, 40, 51, 45, 33, 48,
-									44, 49, 39, 56, 34, 53,
-									46, 42, 50, 36, 29, 32};
 		
 		BitString bits = new BitString(key);
 		BitString p1_Key = new BitString(56);
@@ -111,45 +95,17 @@ public class DES {
 			p1_Key.setBit(i, bit.getValue());
 		}
 		
+		
+		
 		System.out.println(bits.toString());
 		System.out.println(p1_Key.toString());
 
-		//Split the key into left and right halves
-		BitString p1_Key_l = p1_Key.subString(0, 28);
-		BitString p1_Key_r = p1_Key.subString(28, 56);
+		BitString p1_Key_1 = p1_Key.subString(0, 28);
+		BitString p1_Key_2 = p1_Key.subString(28, 56);
+		System.out.println(p1_Key_1);
 		
-		BitString[] keySchedule = new BitString[16];
+		return null;
 		
-		for (int i = 0; i < 16; i++) {
-			
-			//shift our split keys
-			if (i == 0 || i == 1 || i == 8 || i == 15) {
-				//one shift
-				p1_Key_l.leftShift();
-				p1_Key_r.leftShift();
-			} else {
-				//two shifts
-				p1_Key_l.leftShift();
-				p1_Key_l.leftShift();
-				
-				p1_Key_r.leftShift();
-				p1_Key_r.leftShift();
-			}
-			
-			BitString tempKey = p1_Key_l.concat(p1_Key_r);
-			
-			BitString permutedKey = new BitString(48);
-			
-			for (int j = 0; j < permutedKey.length; j++) {
-				int index = second_permutation[j] - 1;
-				
-				permutedKey.setBit(j, tempKey.getBit(index));
-			}
-
-			keySchedule[i] = permutedKey;
-		}
-		
-		return keySchedule;
 	}
 
 	
