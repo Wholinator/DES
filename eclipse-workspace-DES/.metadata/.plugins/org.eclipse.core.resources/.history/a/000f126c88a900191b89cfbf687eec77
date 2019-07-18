@@ -1,0 +1,154 @@
+
+public class BitString {
+	private Bit[] bits;
+	public int length;
+	
+	//bit array constructor
+	public BitString(Bit[] bits) {
+		setBits(bits);
+		this.length = bits.length;
+	}
+	
+	//Instantiates a BitString from an array of bytes
+	public BitString(byte[] bytes) {
+		int bitLength = 8 * bytes.length;
+		
+		//instantiate the bit array
+		bits = initBits(new Bit[bitLength]);
+		
+		int byteNum = 0;
+		for (int i = 0; i < bitLength; i++) {
+			int index = i % 8;
+			
+			//acquire index value from the byteNum byte
+			int value = (bytes[byteNum] >> index) & 1;
+
+			//populate bitArray 
+			
+			//reverses order of bits in each individual byte because we read bits little-endian
+			int index_to_change = (((byteNum + 1) * 8) - index) - 1;
+			setBit(index_to_change, value);
+			
+			if (i % 8 == 0 && i != 0) {
+				byteNum++;
+			}
+		}
+		
+		this.length = bits.length;
+	}
+	
+	//Instantiates a BitString of all 0 of a certain length
+	public BitString(int length) {
+		bits = initBits(new Bit[length]);
+		
+		this.length = length;
+	}
+	
+	//Creates bit objects for a give bit array
+	private Bit[] initBits(Bit[] b) {
+		for (int i = 0; i < b.length; i++) {
+			b[i] = new Bit();
+		}
+		
+		return b;
+	}
+	
+	//bitwise circular left shift
+	public void leftShift() {
+		//store first bit to wrap to back
+		Bit firstBit = getBits()[0];
+		
+		//move each bit to index 1 lower
+		for (int i = 1; i < length; i++) {
+			setBit(i - 1, getBit(i));
+		}
+		//wrap first bit to the back
+		setBit(length - 1, firstBit);
+	}
+	
+	//bitwise circular right shift
+	public void rightShift() {
+		Bit lastBit = getBits()[length - 1];
+		
+		for (int i = length-2; i >= 0; i--) {
+			setBit(i+1, getBit(i));
+		}
+		
+		setBit(0, lastBit);
+	}
+	
+	//returns sub section of BitString
+	public BitString subString(int start, int end) {
+		int length = end - start;
+		
+		BitString bitString = new BitString(length);
+		
+		for (int i = start; i < end; i++) {
+			bitString.setBit(i - start, getBit(i));
+		}
+		
+		return bitString;
+	}
+	
+	//appends two BitStrings together
+	public BitString concat(BitString bitString) {
+		
+		BitString returnBits = new BitString(length + bitString.length);
+		
+		for (int i = 0; i < length; i++) {
+			returnBits.setBit(i, getBit(i));
+		}
+		
+		for (int i = 0; i < bitString.length; i++) {
+			returnBits.setBit(i + length, bitString.getBit(i));
+		}
+		
+		return returnBits;
+	}
+	
+	
+//	public static BitString leftShift(BitString bitString) {
+//		//store first bit to wrap to back
+//		Bit firstBit = bitString.getBits()[0];
+//		
+//		//move each bit to index 1 lower
+//		for (int i = 1; i < bitString.length; i++) {
+//			bitString.setBit(i - 1, bitString.getBit(i));
+//		}
+//		//wrap first bit to the back
+//		bitString.setBit(bitString.length - 1, firstBit);
+//	
+//		return bitString;
+//	}
+
+	public Bit[] getBits() {
+		return bits;
+	}
+
+	public void setBits(Bit[] bits) {
+		this.bits = bits;
+	}
+	
+	public void setBit(int index, int value) {
+		bits[index].setValue(value);
+	}
+	
+	public void setBit(int index, Bit bit) {
+		bits[index] = bit;
+	}
+	
+	public Bit getBit(int index) {
+		return bits[index];
+	}
+	
+	//simply returns string containing all bit values in order
+	public String toString() {
+		String s = "";
+		
+		for (Bit b : bits) {
+			s = s + b.getValue();
+		}
+		return s;
+	}
+	
+}

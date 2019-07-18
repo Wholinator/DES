@@ -9,6 +9,7 @@ public class BitString {
 		this.length = bits.length;
 	}
 	
+	//Instantiates a BitString from an array of bytes
 	public BitString(byte[] bytes) {
 		int bitLength = 8 * bytes.length;
 		
@@ -36,12 +37,14 @@ public class BitString {
 		this.length = bits.length;
 	}
 	
+	//Instantiates a BitString of all 0 of a certain length
 	public BitString(int length) {
 		bits = initBits(new Bit[length]);
 		
 		this.length = length;
 	}
 	
+	//Creates bit objects for a give bit array
 	private Bit[] initBits(Bit[] b) {
 		for (int i = 0; i < b.length; i++) {
 			b[i] = new Bit();
@@ -50,6 +53,7 @@ public class BitString {
 		return b;
 	}
 	
+	//bitwise circular left shift
 	public void leftShift() {
 		//store first bit to wrap to back
 		Bit firstBit = getBits()[0];
@@ -62,6 +66,7 @@ public class BitString {
 		setBit(length - 1, firstBit);
 	}
 	
+	//bitwise circular right shift
 	public void rightShift() {
 		Bit lastBit = getBits()[length - 1];
 		
@@ -72,7 +77,7 @@ public class BitString {
 		setBit(0, lastBit);
 	}
 	
-	
+	//returns sub section of BitString
 	public BitString subString(int start, int end) {
 		int length = end - start;
 		
@@ -85,6 +90,7 @@ public class BitString {
 		return bitString;
 	}
 	
+	//appends two BitStrings together
 	public BitString concat(BitString bitString) {
 		
 		BitString returnBits = new BitString(length + bitString.length);
@@ -99,6 +105,19 @@ public class BitString {
 		
 		return returnBits;
 	}
+	
+	public BitString applyPermutation(int[] permutation) {
+		BitString permuted = new BitString(permutation.length);
+		
+		for (int i = 0; i < permutation.length; i++) {
+			int index = permutation[i] - 1;
+			
+			permuted.setBit(i, getBit(index));
+		}
+		
+		return permuted;
+	}
+	
 	
 	
 //	public static BitString leftShift(BitString bitString) {
@@ -135,15 +154,36 @@ public class BitString {
 		return bits[index];
 	}
 	
+	
+	public boolean equals(BitString bitString) {
+		boolean equals = true;
+		
+		//if same length
+		if (length == bitString.length) {
+			Bit[] bits1 = getBits();
+			Bit[] bits2 = bitString.getBits();
+			
+			//check every bit values equality
+			for (int i = 0; i < length; i++) {
+				if (bits1[i].getValue() != bits2[i].getValue()) {
+					equals = false;
+				}
+			}
+		} 
+		else {
+			equals = false;
+		}
+		return equals;
+	}
+	
+	//simply returns string containing all bit values in order
 	public String toString() {
 		String s = "";
 		
 		for (Bit b : bits) {
 			s = s + b.getValue();
 		}
-		
 		return s;
-		
 	}
 	
 }

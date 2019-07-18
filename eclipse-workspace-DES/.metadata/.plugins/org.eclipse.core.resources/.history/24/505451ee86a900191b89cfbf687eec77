@@ -1,0 +1,119 @@
+import java.util.Random;
+
+public class DES {
+	private byte[] key;
+	private Random rand;
+	
+	public DES(byte[] key) {
+		setRand();
+		setKey(key);
+	}
+	
+	public DES(String key) {
+		setRand();
+		
+		byte[] b = key.getBytes();
+		if (b.length == 7) {
+			setKey(b);
+		} else {
+			System.out.println("Key not valid length: Generating new key");
+			setKey(DESKey.genKey());
+		}
+	}
+	
+	public DES() {
+		setRand();
+		setKey(DESKey.genKey());
+	}
+	
+	
+	//encrypts plaintext
+	@SuppressWarnings("unused")
+	public String encrypt(String plaintext) {
+		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
+				                     60, 52, 44, 36, 28, 20, 12, 4,
+				                     62, 54, 46, 38, 30, 22, 14, 6,
+				                     64, 56, 48, 40, 32, 24, 16, 8,
+				                     57, 49, 41, 33, 25, 17, 9,  1,
+				                     59, 51, 43, 35, 27, 19, 11, 3,
+				                     61, 53, 45, 37, 29, 21, 13, 5,
+				                     63, 55, 47, 39, 31, 23, 15, 7};
+		
+		
+		byte[][] byteBlocks = getByteBlocks(plaintext);
+		BitString[] bitBlocks = getBitBlocks(plaintext);
+		
+		BitString[] keySchedule = DESKey.getKeySchedule(key);
+		
+		
+		
+		return plaintext;
+	}
+	
+	//public encodeBlock()
+	
+	//transforms a string into an array of byte[8] arrays
+	//each byte[8] array is 64 bits and considered a block in DES
+	private byte[][] getByteBlocks(String plaintext) {
+		byte[] bytes = plaintext.getBytes();
+		int numBlocks = (int) Math.ceil(bytes.length / 8.0);
+		
+		byte[][] blocks = new byte[numBlocks][8];
+		
+		//counter for bytes
+		int c = 0;
+		//counter for block
+		int block = 0;
+		
+		//iterate through every byte
+		while (c < bytes.length) {
+			//get our position in the block
+			int byteNum = c % 8;
+			
+			//set the block:position to the sequential byte
+			blocks[block][byteNum] = bytes[c];
+			
+			//move to the next block
+			if (byteNum == 7) {
+				block++;
+			}
+			c++;
+		}
+		return blocks;
+	}
+	
+	//get an array of 64 bit blocks from plaintext
+	private BitString[] getBitBlocks(String plaintext) {
+		byte[][] byteBlocks = getByteBlocks(plaintext);
+		
+		int length = byteBlocks.length;
+		
+		BitString[] bitBlocks = new BitString[length];
+		
+		for(int i = 0; i < length; i++) {
+			bitBlocks[i] = new BitString(byteBlocks[i]);
+		}
+		
+		return bitBlocks;
+	}
+
+	
+	//Getter: key
+	public byte[] getKey() {
+		return key;
+	}
+
+	//Setter: key
+	public void setKey(byte[] key) {
+		this.key = key;
+	}
+	
+	
+	public Random getRand() {
+		return rand;
+	}
+
+	public void setRand() {
+		this.rand = new Random(System.currentTimeMillis());
+	}
+}

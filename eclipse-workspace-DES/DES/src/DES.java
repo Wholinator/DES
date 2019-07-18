@@ -17,57 +17,61 @@ public class DES {
 			setKey(b);
 		} else {
 			System.out.println("Key not valid length: Generating new key");
-			setKey(genKey());
+			setKey(DESKey.genKey());
 		}
 	}
 	
 	public DES() {
 		setRand();
-		setKey(genKey());
-	}
-	
-
-
-	//generates random 64 bit key
-	public byte[] genKey() {
-		byte[] bKey = new byte[8];
-		rand.nextBytes(bKey);
-
-		return bKey;
+		setKey(DESKey.genKey());
 	}
 	
 	
 	//encrypts plaintext
 	@SuppressWarnings("unused")
 	public String encrypt(String plaintext) {
-		byte[][] blocks = getBlocks(plaintext);
+		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
+				                     60, 52, 44, 36, 28, 20, 12, 4,
+				                     62, 54, 46, 38, 30, 22, 14, 6,
+				                     64, 56, 48, 40, 32, 24, 16, 8,
+				                     57, 49, 41, 33, 25, 17, 9,  1,
+				                     59, 51, 43, 35, 27, 19, 11, 3,
+				                     61, 53, 45, 37, 29, 21, 13, 5,
+				                     63, 55, 47, 39, 31, 23, 15, 7};
 		
-		BitString[] keySchedule = getKeySchedule(key);
+		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
-		System.out.println("Key Schedule: ");
+		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		for (BitString b : keySchedule) {
-			System.out.println(b.toString());
-		}
+		
 		
 		return plaintext;
 	}
 	
+	//public encodeBlock()
+	
 	//transforms a string into an array of byte[8] arrays
 	//each byte[8] array is 64 bits and considered a block in DES
-	private byte[][] getBlocks(String plaintext) {
+	private byte[][] getByteBlocks(String plaintext) {
 		byte[] bytes = plaintext.getBytes();
 		int numBlocks = (int) Math.ceil(bytes.length / 8.0);
 		
 		byte[][] blocks = new byte[numBlocks][8];
 		
+		//counter for bytes
 		int c = 0;
+		//counter for block
 		int block = 0;
+		
+		//iterate through every byte
 		while (c < bytes.length) {
+			//get our position in the block
 			int byteNum = c % 8;
 			
+			//set the block:position to the sequential byte
 			blocks[block][byteNum] = bytes[c];
 			
+			//move to the next block
 			if (byteNum == 7) {
 				block++;
 			}
@@ -76,80 +80,20 @@ public class DES {
 		return blocks;
 	}
 	
-	
-	public BitString[] getKeySchedule(byte[] key) {
-		int[] initial_permutation = {57, 49, 41, 33, 25, 17,  9,
-									 1,  58, 50, 42, 34, 26, 18,
-									 10, 2,  59, 51, 43, 35, 27,
-									 19, 11, 3,  60, 52, 44, 36,
-									 63, 55, 47, 39, 31, 23, 15,
-									 7,  62, 54, 46, 38, 30, 22,
-									 14, 6,  61, 53, 45, 37, 29,
-									 21, 13, 5,  28, 20, 12, 4};
+	//get an array of 64 bit blocks from plaintext
+	private BitString[] getBitBlocks(String plaintext) {
+		byte[][] byteBlocks = getByteBlocks(plaintext);
 		
-		int[] second_permutation = {14, 17, 11, 24, 1,  5,
-									3,  28, 15, 6,  21, 10,
-									23, 19, 12, 4,  26, 8,
-									16, 7,  27, 20, 13, 2,
-									41, 52, 31, 37, 47, 55,
-									30, 40, 51, 45, 33, 48,
-									44, 49, 39, 56, 34, 53,
-									46, 42, 50, 36, 29, 32};
+		int length = byteBlocks.length;
 		
-		BitString bits = new BitString(key);
-		BitString p1_Key = new BitString(56);
+		BitString[] bitBlocks = new BitString[length];
 		
-		////
-		//// Perform Initial Permutation
-		////
-		for (int i = 0; i < p1_Key.length; i++) {
-			//retrieve the scrambled bit
-			int getIndex = initial_permutation[i] - 1;
-			Bit bit = bits.getBits()[getIndex];
-			
-			//place scrambled bit in permuted key
-			p1_Key.setBit(i, bit.getValue());
+		//convert every 8byte array to 64bitstring
+		for(int i = 0; i < length; i++) {
+			bitBlocks[i] = new BitString(byteBlocks[i]);
 		}
 		
-		System.out.println(bits.toString());
-		System.out.println(p1_Key.toString());
-
-		//Split the key into left and right halves
-		BitString p1_Key_l = p1_Key.subString(0, 28);
-		BitString p1_Key_r = p1_Key.subString(28, 56);
-		
-		BitString[] keySchedule = new BitString[16];
-		
-		for (int i = 0; i < 16; i++) {
-			
-			//shift our split keys
-			if (i == 0 || i == 1 || i == 8 || i == 15) {
-				//one shift
-				p1_Key_l.leftShift();
-				p1_Key_r.leftShift();
-			} else {
-				//two shifts
-				p1_Key_l.leftShift();
-				p1_Key_l.leftShift();
-				
-				p1_Key_r.leftShift();
-				p1_Key_r.leftShift();
-			}
-			
-			BitString tempKey = p1_Key_l.concat(p1_Key_r);
-			
-			BitString permutedKey = new BitString(48);
-			
-			for (int j = 0; j < permutedKey.length; j++) {
-				int index = second_permutation[j] - 1;
-				
-				permutedKey.setBit(j, tempKey.getBit(index));
-			}
-
-			keySchedule[i] = permutedKey;
-		}
-		
-		return keySchedule;
+		return bitBlocks;
 	}
 
 	
