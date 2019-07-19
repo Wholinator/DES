@@ -88,9 +88,6 @@ public class DES {
 		
 		System.out.println(block.toString());
 		//TODO: divide into 8 pieces and s-box
-		
-		BitString one = block.subString(0,  6);
-		BitString t = s1(one);
 		//TODO: pbox it all together
 		
 		return null;
@@ -176,14 +173,9 @@ public class DES {
 		BitString b1 = input.subString(0,  1);
 		BitString b2 = input.subString(input.length-1, input.length);
 		
-		byte ends = b1.concat(b2).getBytes()[0];
 		
-		byte middle = input.subString(1, 5).getBytes()[0];
 		
-		byte[] returnByte = new byte[1];
-		returnByte[0] = (byte) permutation[ends][middle];
-		
-		return new BitString(returnByte);
+		return input;
 		
 	}
 	

@@ -180,8 +180,7 @@ public class DES {
 		
 		byte middle = input.subString(1, 5).getBytes()[0];
 		
-		byte[] returnByte = new byte[1];
-		returnByte[0] = (byte) permutation[ends][middle];
+		byte returnByte = (byte) permutation[ends][middle];
 		
 		return new BitString(returnByte);
 		

@@ -153,15 +153,11 @@ public class BitString {
 		
 		for (int i = 0; i < byteLen; i++) {
 			//get substring of 8 bytes from right to left
-			BitString B;
-			
-			try { //
-				B = subString(length - ((i+1) * 8), length - (i * 8));
-			} catch (ArrayIndexOutOfBoundsException e) {
-				B = subString(0, length- (i * 8));
-			}
+			BitString B = subString(length - ((i+1) * 8), length - (i * 8));
 			
 			byte byt = Byte.parseByte(B.toString(), 2);
+			
+			//TODO: add error handle if first byte isn't 8 bits long
 			
 			byteArray[byteLen - i - 1] = byt;
 		}

@@ -157,7 +157,7 @@ public class BitString {
 			
 			try { //
 				B = subString(length - ((i+1) * 8), length - (i * 8));
-			} catch (ArrayIndexOutOfBoundsException e) {
+			} catch (Exception e) {
 				B = subString(0, length- (i * 8));
 			}
 			
