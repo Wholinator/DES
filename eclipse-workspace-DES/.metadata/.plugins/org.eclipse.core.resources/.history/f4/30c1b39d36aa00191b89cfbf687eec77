@@ -3,16 +3,8 @@ public class BitString {
 	private Bit[] bits;
 	public int length;
 	
-	
-	public BitString(Bit bit) {
-		bits = initBits(new Bit[1]);
-		setBit(0, bit);
-		this.length = 1;
-	}
-	
 	//bit array constructor
 	public BitString(Bit[] bits) {
-		bits = initBits(new Bit[bits.length]);
 		setBits(bits);
 		this.length = bits.length;
 	}
@@ -147,7 +139,7 @@ public class BitString {
 	}
 	
 	//transforms the bitstring into a byte array
-	public byte[] getBytes() {
+	public byte[] toBytes() {
 		int byteLen = (int) Math.ceil(length / 8.0);
 		byte[] byteArray = new byte[byteLen];
 		
@@ -161,6 +153,7 @@ public class BitString {
 			
 			byteArray[byteLen - i - 1] = byt;
 		}
+		
 		return byteArray;
 	}
 	
