@@ -106,7 +106,6 @@ public class BitString {
 		return returnBits;
 	}
 	
-	//applies the desired permutation array to the BitString
 	public BitString applyPermutation(int[] permutation) {
 		BitString permuted = new BitString(permutation.length);
 		
@@ -117,44 +116,6 @@ public class BitString {
 		}
 		
 		return permuted;
-	}
-	
-	//performs the xor function with self and argument
-	public BitString xor(BitString bitString) {
-		BitString returnBits;
-		
-		if (length == bitString.length) {
-			returnBits = new BitString(length);
-			
-			for (int i = 0; i < length; i++) {
-				//xor the bit values for this and arg strings and place at same index
-				int value = getBits()[i].getValue() ^ bitString.getBit(i).getValue();
-				returnBits.setBit(i, new Bit(value));
-			}
-		} else {
-			returnBits = new BitString(1);
-		}
-		
-		return returnBits;
-	}
-	
-	//transforms the bitstring into a byte array
-	public byte[] toBytes() {
-		int byteLen = (int) Math.ceil(length / 8.0);
-		byte[] byteArray = new byte[byteLen];
-		
-		for (int i = 0; i < byteLen; i++) {
-			//get substring of 8 bytes from right to left
-			BitString B = subString(length - ((i+1) * 8), length - (i * 8));
-			
-			byte byt = Byte.parseByte(B.toString(), 2);
-			
-			//TODO: add error handle if first byte isn't 8 bits long
-			
-			byteArray[byteLen - i - 1] = byt;
-		}
-		
-		return byteArray;
 	}
 	
 	

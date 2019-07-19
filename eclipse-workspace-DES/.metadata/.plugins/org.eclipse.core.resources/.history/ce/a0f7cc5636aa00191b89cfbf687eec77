@@ -106,7 +106,6 @@ public class BitString {
 		return returnBits;
 	}
 	
-	//applies the desired permutation array to the BitString
 	public BitString applyPermutation(int[] permutation) {
 		BitString permuted = new BitString(permutation.length);
 		
@@ -119,7 +118,7 @@ public class BitString {
 		return permuted;
 	}
 	
-	//performs the xor function with self and argument
+	
 	public BitString xor(BitString bitString) {
 		BitString returnBits;
 		
@@ -138,7 +137,6 @@ public class BitString {
 		return returnBits;
 	}
 	
-	//transforms the bitstring into a byte array
 	public byte[] toBytes() {
 		int byteLen = (int) Math.ceil(length / 8.0);
 		byte[] byteArray = new byte[byteLen];

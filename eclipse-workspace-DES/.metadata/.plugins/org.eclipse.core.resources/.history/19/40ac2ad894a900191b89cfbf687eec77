@@ -30,68 +30,25 @@ public class DES {
 	//encrypts plaintext
 	@SuppressWarnings("unused")
 	public String encrypt(String plaintext) {
-
+		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
+				                     60, 52, 44, 36, 28, 20, 12, 4,
+				                     62, 54, 46, 38, 30, 22, 14, 6,
+				                     64, 56, 48, 40, 32, 24, 16, 8,
+				                     57, 49, 41, 33, 25, 17, 9,  1,
+				                     59, 51, 43, 35, 27, 19, 11, 3,
+				                     61, 53, 45, 37, 29, 21, 13, 5,
+				                     63, 55, 47, 39, 31, 23, 15, 7};
 		
 		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		processBlock(bitBlocks[0],  keySchedule);	
+		
 		
 		return plaintext;
 	}
 	
-	public BitString processBlock(BitString block, BitString[] keySchedule) {
-		
-		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
-					                 60, 52, 44, 36, 28, 20, 12, 4,
-					                 62, 54, 46, 38, 30, 22, 14, 6,
-					                 64, 56, 48, 40, 32, 24, 16, 8,
-					                 57, 49, 41, 33, 25, 17, 9,  1,
-					                 59, 51, 43, 35, 27, 19, 11, 3,
-					                 61, 53, 45, 37, 29, 21, 13, 5,
-					                 63, 55, 47, 39, 31, 23, 15, 7};
-		
-
-		
-		block = block.applyPermutation(initial_permutation);
-		
-		BitString blockL = block.subString(0,  32);
-		BitString blockR = block.subString(32, 64);
-		
-		
-		BitString newb = fiestel(blockL, keySchedule[0]);
-		//16 rounds of feistel function
-		//   1: expand 32-bit to 48-bit with expansion permutation
-		//   2: xor result with subkey of round
-		//   3: divide into 8 pieces and process with s-boxes
-		//   4: pbox it
-		
-		return null;
-		
-	}
-	
-	private BitString fiestel(BitString block, BitString roundKey) {
-		int[] expansion_permutation = { 32, 1,  2,  3,  4,  5,
-						                4,  5,  6,  7,  8,  9, 
-						                8,  9,  10, 11, 12, 13,
-						                12, 13, 14, 15, 16, 17,
-						                16, 17, 18, 19, 20, 21,
-						                20, 21, 22, 23, 24, 25,
-						                24, 25, 26, 27, 28, 29, 
-						                28, 29, 30, 31, 32, 1  };
-		
-		
-		block = block.applyPermutation(expansion_permutation);
-
-		block = block.xor(roundKey);
-		
-		System.out.println(block.toString());
-		//TODO: divide into 8 pieces and s-box
-		//TODO: pbox it all together
-		
-		return null;
-	}
+	//public encodeBlock()
 	
 	//transforms a string into an array of byte[8] arrays
 	//each byte[8] array is 64 bits and considered a block in DES

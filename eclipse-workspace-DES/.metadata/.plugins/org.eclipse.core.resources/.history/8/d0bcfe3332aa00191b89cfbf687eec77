@@ -36,12 +36,12 @@ public class DES {
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		processBlock(bitBlocks[0],  keySchedule);	
+		
 		
 		return plaintext;
 	}
 	
-	public BitString processBlock(BitString block, BitString[] keySchedule) {
+	public BitString processBlock(BitString block) {
 		
 		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
 					                 60, 52, 44, 36, 28, 20, 12, 4,
@@ -52,7 +52,14 @@ public class DES {
 					                 61, 53, 45, 37, 29, 21, 13, 5,
 					                 63, 55, 47, 39, 31, 23, 15, 7};
 		
-
+		int[] expansion_permutation = {32, 1,  2,  3,  4,  5,
+				                       4,  5,  6,  7,  8,  9, 
+				                       8,  9,  10, 11, 12, 13,
+				                       12, 13, 14, 15, 16, 17,
+				                       16, 17, 18, 19, 20, 21,
+				                       20, 21, 22, 23, 24, 25,
+				                       24, 25, 26, 27, 28, 29, 
+				                       28, 29, 30, 31, 32, 1};
 		
 		block = block.applyPermutation(initial_permutation);
 		
@@ -60,7 +67,7 @@ public class DES {
 		BitString blockR = block.subString(32, 64);
 		
 		
-		BitString newb = fiestel(blockL, keySchedule[0]);
+		
 		//16 rounds of feistel function
 		//   1: expand 32-bit to 48-bit with expansion permutation
 		//   2: xor result with subkey of round
@@ -69,28 +76,6 @@ public class DES {
 		
 		return null;
 		
-	}
-	
-	private BitString fiestel(BitString block, BitString roundKey) {
-		int[] expansion_permutation = { 32, 1,  2,  3,  4,  5,
-						                4,  5,  6,  7,  8,  9, 
-						                8,  9,  10, 11, 12, 13,
-						                12, 13, 14, 15, 16, 17,
-						                16, 17, 18, 19, 20, 21,
-						                20, 21, 22, 23, 24, 25,
-						                24, 25, 26, 27, 28, 29, 
-						                28, 29, 30, 31, 32, 1  };
-		
-		
-		block = block.applyPermutation(expansion_permutation);
-
-		block = block.xor(roundKey);
-		
-		System.out.println(block.toString());
-		//TODO: divide into 8 pieces and s-box
-		//TODO: pbox it all together
-		
-		return null;
 	}
 	
 	//transforms a string into an array of byte[8] arrays

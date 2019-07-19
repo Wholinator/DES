@@ -36,7 +36,7 @@ public class DES {
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		processBlock(bitBlocks[0],  keySchedule);	
+		
 		
 		return plaintext;
 	}
@@ -82,8 +82,10 @@ public class DES {
 						                28, 29, 30, 31, 32, 1  };
 		
 		
+		System.out.println(block.toString());
 		block = block.applyPermutation(expansion_permutation);
-
+		System.out.println(block.toString());
+		System.out.println(roundKey.toString());
 		block = block.xor(roundKey);
 		
 		System.out.println(block.toString());

@@ -36,12 +36,12 @@ public class DES {
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		processBlock(bitBlocks[0],  keySchedule);	
+		
 		
 		return plaintext;
 	}
 	
-	public BitString processBlock(BitString block, BitString[] keySchedule) {
+	public BitString processBlock(BitString block) {
 		
 		int[] initial_permutation = {58, 50, 42, 34, 26, 18, 10, 2,
 					                 60, 52, 44, 36, 28, 20, 12, 4,
@@ -59,8 +59,6 @@ public class DES {
 		BitString blockL = block.subString(0,  32);
 		BitString blockR = block.subString(32, 64);
 		
-		
-		BitString newb = fiestel(blockL, keySchedule[0]);
 		//16 rounds of feistel function
 		//   1: expand 32-bit to 48-bit with expansion permutation
 		//   2: xor result with subkey of round
@@ -82,8 +80,10 @@ public class DES {
 						                28, 29, 30, 31, 32, 1  };
 		
 		
+		System.out.println(block.toString());
 		block = block.applyPermutation(expansion_permutation);
-
+		System.out.println(block.toString());
+		System.out.println(roundKey.toString());
 		block = block.xor(roundKey);
 		
 		System.out.println(block.toString());

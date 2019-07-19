@@ -106,7 +106,6 @@ public class BitString {
 		return returnBits;
 	}
 	
-	//applies the desired permutation array to the BitString
 	public BitString applyPermutation(int[] permutation) {
 		BitString permuted = new BitString(permutation.length);
 		
