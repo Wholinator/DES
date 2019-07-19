@@ -81,18 +81,14 @@ public class DES {
 						                24, 25, 26, 27, 28, 29, 
 						                28, 29, 30, 31, 32, 1  };
 		
-		int[] pbox = {16, 7,  20, 21, 29, 12, 28, 17,
-				      1,  15, 23, 26, 5,  18, 31, 10,
-				      2,  8,  24, 14, 32, 27, 3,  9,
-				      19, 13, 30, 6,  22, 11, 4,  25};
 		
-		//expansion permutation
 		block = block.applyPermutation(expansion_permutation);
 
-		//XOR with key
 		block = block.xor(roundKey);
 		
-
+		System.out.println(block.toString());
+		//TODO: divide into 8 pieces and s-box
+		
 		BitString output = new BitString(0);
 		
 		//build s-boxed output string
@@ -100,13 +96,13 @@ public class DES {
 			int start = i * 6;
 			int end = start + 6;
 			
-			output = output.concat(sBox(block.subString(start, end), i+1));
+			output.concat(sBox(block.subString(start, end), i+1));
 		}
 		
-		//pbox
-		output = output.applyPermutation(pbox);
+		System.out.println(output.toString());
+		//TODO: pbox it all together
 		
-		return output;
+		return null;
 	}
 	
 	//transforms a string into an array of byte[8] arrays
@@ -255,7 +251,7 @@ public class DES {
 			returnByte[0] = (byte) permutation[ends][middle];
 		}
 		
-		return new BitString(returnByte).subString(4, 8);
+		return new BitString(returnByte);
 	}
 	
 	private BitString s1(BitString input) {

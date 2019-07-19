@@ -86,13 +86,13 @@ public class DES {
 				      2,  8,  24, 14, 32, 27, 3,  9,
 				      19, 13, 30, 6,  22, 11, 4,  25};
 		
-		//expansion permutation
 		block = block.applyPermutation(expansion_permutation);
 
-		//XOR with key
 		block = block.xor(roundKey);
 		
-
+		System.out.println(block.toString());
+		//TODO: divide into 8 pieces and s-box
+		
 		BitString output = new BitString(0);
 		
 		//build s-boxed output string
@@ -103,8 +103,8 @@ public class DES {
 			output = output.concat(sBox(block.subString(start, end), i+1));
 		}
 		
-		//pbox
 		output = output.applyPermutation(pbox);
+		//TODO: pbox it all together
 		
 		return output;
 	}
@@ -174,6 +174,9 @@ public class DES {
 		this.rand = new Random(System.currentTimeMillis());
 	}
 	
+	private BitString pBox(BitString input) {
+		
+	}
 	
 	private BitString sBox(BitString input, int boxNum) {
 		BitString b1 = input.subString(0,  1);
