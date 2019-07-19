@@ -29,18 +29,16 @@ public class DES {
 	
 	//encrypts plaintext
 	@SuppressWarnings("unused")
-	public BitString encrypt(String plaintext) {
+	public String encrypt(String plaintext) {
+
+		
 		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		BitString returnBlock = new BitString(0);
+		processBlock(bitBlocks[0],  keySchedule);	
 		
-		for (int i = 0; i < bitBlocks.length; i++) {
-			returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
-		}
-		
-		return returnBlock;
+		return plaintext;
 	}
 	
 	public BitString processBlock(BitString block, BitString[] keySchedule) {
@@ -54,35 +52,22 @@ public class DES {
 					                 61, 53, 45, 37, 29, 21, 13, 5,
 					                 63, 55, 47, 39, 31, 23, 15, 7};
 		
-		int[] final_permutation = {40,8,48,16,56,24,64,32,
-				                   39,7,47,15,55,23,63,31,
-				                   38,6,46,14,54,22,62,30,
-				                   37,5,45,13,53,21,61,29,
-				                   36,4,44,12,52,20,60,28,
-				                   35,3,43,11,51,19,59,27,
-				                   34,2,42,10,50,18,58,26,
-				                   33,1,41,9 ,49,17,57,25};
-		
+
 		
 		block = block.applyPermutation(initial_permutation);
 		
 		BitString blockL = block.subString(0,  32);
 		BitString blockR = block.subString(32, 64);
 		
-		//fiestel cipher
-		for (int i = 0; i < 16; i++) {
-			BitString tempBlockL = blockR;
-			BitString tempBlockR = blockL.xor(fiestel(blockR, keySchedule[i]));
-			
-			blockL = tempBlockL;
-			blockR = tempBlockR;
-		}
 		
-		block = blockL.concat(blockR);
-
-		block = block.applyPermutation(final_permutation);
+		BitString newb = fiestel(blockL, keySchedule[0]);
+		//16 rounds of feistel function
+		//   1: expand 32-bit to 48-bit with expansion permutation
+		//   2: xor result with subkey of round
+		//   3: divide into 8 pieces and process with s-boxes
+		//   4: pbox it
 		
-		return block;
+		return null;
 		
 	}
 	

@@ -29,18 +29,14 @@ public class DES {
 	
 	//encrypts plaintext
 	@SuppressWarnings("unused")
-	public BitString encrypt(String plaintext) {
+	public String encrypt(String plaintext) {
 		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
 		BitString[] keySchedule = DESKey.getKeySchedule(key);
 		
-		BitString returnBlock = new BitString(0);
+		processBlock(bitBlocks[0],  keySchedule);	
 		
-		for (int i = 0; i < bitBlocks.length; i++) {
-			returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
-		}
-		
-		return returnBlock;
+		return plaintext;
 	}
 	
 	public BitString processBlock(BitString block, BitString[] keySchedule) {
@@ -80,9 +76,10 @@ public class DES {
 		
 		block = blockL.concat(blockR);
 
+		
 		block = block.applyPermutation(final_permutation);
 		
-		return block;
+		return null;
 		
 	}
 	
