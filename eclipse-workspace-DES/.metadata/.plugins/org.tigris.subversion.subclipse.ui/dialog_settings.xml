@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item key="HistoryTableProvider.SVNHistoryPage.Revision" value="109"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.Date" value="272"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.Author" value="217"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.Comment" value="343"/>
+	<section name="NewLocationWizard">
+		<list key="ConfigurationWizardMainPage.STORE_URL_ID">
+			<item value="http://svn/argushealth/com/argushealth/util/WASInfo"/>
+		</list>
+	</section>
 </section>

@@ -3,10 +3,12 @@ import java.util.Random;
 public class DES {
 	private byte[] key;
 	private Random rand;
+	private BitString[] keySchedule;
 	
 	public DES(byte[] key) {
 		setRand();
 		setKey(key);
+		keySchedule = DESKey.getKeySchedule(this.key);
 	}
 	
 	public DES(String key) {
@@ -19,20 +21,25 @@ public class DES {
 			System.out.println("Key not valid length: Generating new key");
 			setKey(DESKey.genKey());
 		}
+		
+		keySchedule = DESKey.getKeySchedule(this.key);
 	}
 	
 	public DES() {
 		setRand();
 		setKey(DESKey.genKey());
+		keySchedule = DESKey.getKeySchedule(this.key);
 	}
 	
 	
 	//encrypts plaintext
-	@SuppressWarnings("unused")
 	public BitString encrypt(String plaintext) {
 		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
-		BitString[] keySchedule = DESKey.getKeySchedule(key);
+		System.out.println("BitBlocks inside encryption method:");
+		for (BitString p : bitBlocks) {
+			System.out.print(p.toString());
+		} System.out.println();
 		
 		BitString returnBlock = new BitString(0);
 		
@@ -41,6 +48,24 @@ public class DES {
 		}
 		
 		return returnBlock;
+	}
+	
+	public String decrypt(BitString ciphertext) {
+		BitString[] blocks = ciphertext.getBlocks(64);
+		BitString returnBlock = new BitString(0);
+		
+		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
+		
+		//reverse key schedule for decryption
+		for(int i = 0; i < keySchedule.length; i++) {
+			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
+		}
+		
+		for (int i = 0; i < blocks.length; i++) {
+			returnBlock = returnBlock.concat(processBlock(blocks[i], reversedKeySchedule));
+		}
+
+		return returnBlock.toString();
 	}
 	
 	public BitString processBlock(BitString block, BitString[] keySchedule) {
@@ -110,7 +135,7 @@ public class DES {
 
 		BitString output = new BitString(0);
 		
-		//build s-boxed output string
+		//run sbox on ever 6bit substring
 		for (int i = 0; i < 8; i++) {
 			int start = i * 6;
 			int end = start + 6;

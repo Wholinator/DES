@@ -168,6 +168,19 @@ public class BitString {
 		return byteArray;
 	}
 	
+	public BitString[] getBlocks(int blockLength) {
+		int numBlocks = length / blockLength;
+		BitString[] blocks = new BitString[numBlocks]; 
+		
+		if (length % blockLength == 0) {
+			for (int i = 0; i < numBlocks; i++) {
+				blocks[i] = subString((i * 64), (i+1) * 64);
+			}
+		}
+		
+		return blocks;
+	}
+	
 	
 	
 //	public static BitString leftShift(BitString bitString) {

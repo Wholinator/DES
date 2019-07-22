@@ -1,0 +1,15 @@
+
+public class Driver {
+
+	public static void main(String[] args) {
+		byte[] key = {(byte) 126, (byte) 129, (byte) 82,  (byte) 238, 
+				      (byte) 104, (byte) 160, (byte) 157, (byte) 204};
+		
+		DES d = new DES(key);
+		
+		BitString e = d.encrypt("testing tatesting toe talla prrrrrraaal");
+		
+		System.out.println(e.toString());
+	}
+
+}
