@@ -12,8 +12,10 @@ public class BitString {
 	
 	//bit array constructor
 	public BitString(Bit[] bits) {
-		bits = initBits(new Bit[bits.length]);
-		setBits(bits);
+		this.bits = initBits(new Bit[bits.length]);
+		for (int i = 0; i < bits.length; i++) {
+			this.bits[i] = bits[i];
+		}
 		this.length = bits.length;
 	}
 	
@@ -201,15 +203,15 @@ public class BitString {
 		return bits;
 	}
 
-	public void setBits(Bit[] bits) {
+	private void setBits(Bit[] bits) {
 		this.bits = bits;
 	}
 	
-	public void setBit(int index, int value) {
+	private void setBit(int index, int value) {
 		bits[index].setValue(value);
 	}
 	
-	public void setBit(int index, Bit bit) {
+	private void setBit(int index, Bit bit) {
 		bits[index] = bit;
 	}
 	

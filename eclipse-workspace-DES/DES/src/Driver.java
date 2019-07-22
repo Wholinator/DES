@@ -7,7 +7,7 @@ public class Driver {
 		
 		DES d = new DES(key);
 		
-		String cleartext = "]";
+		String cleartext = "1";
 		BitString clearBits = new BitString(cleartext.getBytes());
 		
 		BitString e = d.encrypt(cleartext);

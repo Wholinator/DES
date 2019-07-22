@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="BitStringTest" project="DES" tests="19" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="BitStringTest" incomplete="true" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]">
+    <testcase name="testRightShift" classname="BitStringTest" incomplete="true" displayname="testRightShift()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testRightShift()]"/>
+    <testcase name="testLeftShift" classname="BitStringTest" incomplete="true" displayname="testLeftShift()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testLeftShift()]"/>
+    <testcase name="testGetBytes" classname="BitStringTest" incomplete="true" displayname="testGetBytes()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testGetBytes()]"/>
+    <testcase name="testXor" classname="BitStringTest" incomplete="true" displayname="testXor()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testXor()]"/>
+    <testcase name="testApplyPermutation" classname="BitStringTest" incomplete="true" displayname="testApplyPermutation()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testApplyPermutation()]"/>
+    <testcase name="testToString" classname="BitStringTest" incomplete="true" displayname="testToString()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testToString()]"/>
+    <testcase name="testGetBits" classname="BitStringTest" incomplete="true" displayname="testGetBits()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testGetBits()]"/>
+    <testcase name="testEqualsBitString" classname="BitStringTest" incomplete="true" displayname="testEqualsBitString()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testEqualsBitString()]"/>
+    <testcase name="testSubString" classname="BitStringTest" incomplete="true" displayname="testSubString()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testSubString()]"/>
+    <testcase name="testGetBlocks" classname="BitStringTest" incomplete="true" displayname="testGetBlocks()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testGetBlocks()]"/>
+    <testcase name="testBitStringByteArray" classname="BitStringTest" incomplete="true" displayname="testBitStringByteArray()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testBitStringByteArray()]"/>
+    <testcase name="testBitStringBitArray" classname="BitStringTest" incomplete="true" displayname="testBitStringBitArray()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testBitStringBitArray()]"/>
+    <testcase name="testConcat" classname="BitStringTest" incomplete="true" displayname="testConcat()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testConcat()]"/>
+    <testcase name="testGetBit" classname="BitStringTest" incomplete="true" displayname="testGetBit()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testGetBit()]"/>
+    <testcase name="testBitStringBit" classname="BitStringTest" incomplete="true" displayname="testBitStringBit()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testBitStringBit()]"/>
+    <testcase name="testBitStringInt" classname="BitStringTest" incomplete="true" displayname="testBitStringInt()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testBitStringInt()]"/>
+    <testcase name="testSetBits" classname="BitStringTest" incomplete="true" displayname="testSetBits()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testSetBits()]"/>
+    <testcase name="testSetBitIntBit" classname="BitStringTest" incomplete="true" displayname="testSetBitIntBit()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testSetBitIntBit()]"/>
+    <testcase name="testSetBitIntInt" classname="BitStringTest" incomplete="true" displayname="testSetBitIntInt()" uniqueid="[engine:junit-jupiter]/[class:BitStringTest]/[method:testSetBitIntInt()]"/>
+  </testsuite>
+</testrun>

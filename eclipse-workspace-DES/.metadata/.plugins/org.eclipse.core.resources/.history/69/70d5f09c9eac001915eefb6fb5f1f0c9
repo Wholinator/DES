@@ -1,0 +1,123 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class BitStringTest {
+
+	
+	
+	@BeforeEach
+	void setUp() throws Exception {
+	}
+
+	@Test
+	void testBitStringBit() {
+		Bit bit = new Bit(0);
+		BitString b = new BitString(bit);
+		assertEquals(1, b.length);
+		assertEquals(0, b.getBit(0).getValue());
+	}
+
+	@Test
+	void testBitStringBitArray() {
+		int length = 5;
+		Bit[] bitArray = new Bit[length];
+		for (int i = 0; i < length; i++) {
+			bitArray[i] = new Bit(1);
+		}
+		BitString b = new BitString(bitArray);
+		
+		assertEquals(5, b.length);
+		assertEquals(0, b.getBit(0));
+		assertEquals(1, b.getBit(3));
+		
+	}
+
+	@Test
+	void testBitStringByteArray() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testBitStringInt() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testLeftShift() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testRightShift() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testSubString() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testConcat() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testApplyPermutation() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testXor() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetBytes() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetBlocks() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetBits() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testSetBits() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testSetBitIntInt() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testSetBitIntBit() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetBit() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testEqualsBitString() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testToString() {
+		fail("Not yet implemented");
+	}
+
+}
