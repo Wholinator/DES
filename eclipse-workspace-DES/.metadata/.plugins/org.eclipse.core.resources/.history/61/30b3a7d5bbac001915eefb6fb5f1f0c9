@@ -11,7 +11,7 @@ public class DES {
 		setRand();
 		setKey(key);
 		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
+		mode = "CBC";
 	}
 	
 	public DES(String key) {
@@ -26,24 +26,14 @@ public class DES {
 		}
 		
 		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
+		mode = "CBC";
 	}
 	
 	public DES() {
 		setRand();
 		setKey(DESKey.genKey());
 		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
-	}
-	
-	//MODE initializer
-	public DES(String mode, byte[] key, BitString inVector) {
-		this.mode = mode;
-		this.inVector = inVector;
-		
-		setRand();
-		setKey(key);
-		keySchedule = DESKey.getKeySchedule(this.key);
+		mode = "CBC";
 	}
 	
 	

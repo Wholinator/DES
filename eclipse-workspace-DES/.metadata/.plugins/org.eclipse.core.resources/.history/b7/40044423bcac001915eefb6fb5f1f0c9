@@ -36,16 +36,6 @@ public class DES {
 		mode = "ECB";
 	}
 	
-	//MODE initializer
-	public DES(String mode, byte[] key, BitString inVector) {
-		this.mode = mode;
-		this.inVector = inVector;
-		
-		setRand();
-		setKey(key);
-		keySchedule = DESKey.getKeySchedule(this.key);
-	}
-	
 	
 	//encrypts plaintext
 	public BitString encrypt(String plaintext) {

@@ -8,8 +8,8 @@ public class Driver {
 		byte[] IV = {(byte) 123, (byte) 88, (byte) 85,  (byte) 21,
 				     (byte) 0,   (byte) 93 ,(byte) 253, (byte) 55};
 		
-		DES d = new DES("CBC", key, new BitString(IV));
-		//DES d = new DES(key);
+		DES d = new DES("CBC", new BitString(key));
+		//DES d = new DES();
 		
 		String cleartext = "1";
 		BitString clearBits = new BitString(cleartext.getBytes());

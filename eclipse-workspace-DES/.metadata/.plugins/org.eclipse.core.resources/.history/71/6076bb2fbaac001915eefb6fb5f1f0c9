@@ -4,14 +4,11 @@ public class DES {
 	private byte[] key;
 	private Random rand;
 	private BitString[] keySchedule;
-	private String mode;
-	private BitString inVector;
 	
 	public DES(byte[] key) {
 		setRand();
 		setKey(key);
 		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
 	}
 	
 	public DES(String key) {
@@ -26,23 +23,11 @@ public class DES {
 		}
 		
 		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
 	}
 	
 	public DES() {
 		setRand();
 		setKey(DESKey.genKey());
-		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
-	}
-	
-	//MODE initializer
-	public DES(String mode, byte[] key, BitString inVector) {
-		this.mode = mode;
-		this.inVector = inVector;
-		
-		setRand();
-		setKey(key);
 		keySchedule = DESKey.getKeySchedule(this.key);
 	}
 	
@@ -51,28 +36,16 @@ public class DES {
 	public BitString encrypt(String plaintext) {
 		BitString[] bitBlocks = getBitBlocks(plaintext);
 		
+		System.out.println("BitBlocks inside encryption method:");
+		for (BitString p : bitBlocks) {
+			System.out.print(p.toString());
+		} System.out.println();
+		
 		BitString returnBlock = new BitString(0);
 		
-		
-		if (mode.equals("ECB")) {
-			//Electronic Code Book
-			for (int i = 0; i < bitBlocks.length; i++) {
-				returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
-			}
-		} else if (mode.contentEquals("CBC")) {
-			//Cipher Block Chaining
-			BitString chain = inVector;
-			
-			for (BitString block : bitBlocks) {
-				block = block.xor(chain);
-				
-				BitString cipherText = processBlock(block, keySchedule);
-				
-				returnBlock = returnBlock.concat(cipherText);
-				chain = cipherText;
-			}
+		for (int i = 0; i < bitBlocks.length; i++) {
+			returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
 		}
-		
 		
 		return returnBlock;
 	}
@@ -88,26 +61,9 @@ public class DES {
 			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
 		}
 		
-		if (mode.contentEquals("ECB")) {
-			//Electronic CodeBook
-			for (int i = 0; i < blocks.length; i++) {
-				returnBlock = returnBlock.concat(processBlock(blocks[i], reversedKeySchedule));
-			}
-		} else if (mode.equals("CBC")) {
-			//Cipher Block Chaining
-			BitString chain = inVector;
-			
-			for (BitString block : blocks) {
-				BitString cleartext = processBlock(block, reversedKeySchedule);
-				
-				cleartext = cleartext.xor(chain);
-				returnBlock = returnBlock.concat(cleartext);
-				
-				chain = block;
-			}
+		for (int i = 0; i < blocks.length; i++) {
+			returnBlock = returnBlock.concat(processBlock(blocks[i], reversedKeySchedule));
 		}
-		
-
 
 		return returnBlock.toString();
 	}
@@ -154,7 +110,6 @@ public class DES {
 		return block;
 		
 	}
-
 	
 	private BitString fiestel(BitString block, BitString roundKey) {
 		int[] expansion_permutation = { 32, 1,  2,  3,  4,  5,

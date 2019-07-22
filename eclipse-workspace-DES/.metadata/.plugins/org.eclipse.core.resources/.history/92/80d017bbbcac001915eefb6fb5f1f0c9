@@ -9,7 +9,7 @@ public class Driver {
 				     (byte) 0,   (byte) 93 ,(byte) 253, (byte) 55};
 		
 		DES d = new DES("CBC", key, new BitString(IV));
-		//DES d = new DES(key);
+		//DES d = new DES();
 		
 		String cleartext = "1";
 		BitString clearBits = new BitString(cleartext.getBytes());

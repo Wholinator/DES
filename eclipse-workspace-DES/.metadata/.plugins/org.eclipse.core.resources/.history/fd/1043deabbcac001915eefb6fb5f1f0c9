@@ -36,13 +36,12 @@ public class DES {
 		mode = "ECB";
 	}
 	
-	//MODE initializer
-	public DES(String mode, byte[] key, BitString inVector) {
+	public DES(String mode, BitString inVector) {
 		this.mode = mode;
 		this.inVector = inVector;
 		
 		setRand();
-		setKey(key);
+		setKey(DESKey.genKey());
 		keySchedule = DESKey.getKeySchedule(this.key);
 	}
 	

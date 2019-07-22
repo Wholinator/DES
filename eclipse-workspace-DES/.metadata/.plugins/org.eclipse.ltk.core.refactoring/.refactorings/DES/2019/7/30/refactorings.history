@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;DES.processBlock(...)&apos; to &apos;processBlock_ECB&apos;&#x0D;&#x0A;- Original project: &apos;DES&apos;&#x0D;&#x0A;- Original element: &apos;DES.processBlock(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;DES.processBlock_ECB(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;processBlock&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{DES.java[DES~processBlock~QBitString;~\[QBitString;" name="processBlock_ECB" references="true" stamp="1563825128684" version="1.0"/>
+</session>
