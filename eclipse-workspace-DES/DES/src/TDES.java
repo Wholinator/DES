@@ -1,0 +1,35 @@
+
+public class TDES extends DES{
+	DES des1, des2, des3;
+	
+	public TDES(byte[][] keyList) {
+		des1 = new DES(keyList[0]);
+		des2 = new DES(keyList[1]);
+		des3 = new DES(keyList[2]);
+	}
+	
+	public TDES() {
+		des1 = new DES();
+		des2 = new DES();
+		des3 = new DES();
+	}
+	
+	//MODE initializer
+	public TDES(String mode, byte[][] keyList, BitString[] inVectors) {
+		des1 = new DES(mode, keyList[0], inVectors[0]);
+		des2 = new DES(mode, keyList[1], inVectors[1]);
+		des3 = new DES(mode, keyList[2], inVectors[2]);
+	}
+	
+	public BitString encrypt(String plaintext) {
+		BitString ciphertext = des3.encrypt(des2.decrypt(des1.encrypt(plaintext)));
+		
+		return ciphertext;
+	}
+	
+	public String decrypt(BitString ciphertext) {
+		String cleartext = des1.decrypt(des2.encrypt(des3.decrypt(ciphertext)));
+		
+		return cleartext;
+	}
+}

@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class DES {
 	private byte[] key;
+	private byte[] key2;
 	private Random rand;
 	private BitString[] keySchedule;
 	private String mode;
@@ -44,9 +45,8 @@ public class DES {
 		setRand();
 		setKey(key);
 		keySchedule = DESKey.getKeySchedule(this.key);
-		
 	}
-
+	
 	
 	//encrypts plaintext
 	public BitString encrypt(String plaintext) {
@@ -108,7 +108,7 @@ public class DES {
 				
 				returnBlock = returnBlock.concat(ciphertext);
 			}
-		} 
+		}
 		
 		return returnBlock;
 	}
@@ -117,7 +117,12 @@ public class DES {
 		BitString[] blocks = ciphertext.getBlocks(64);
 		BitString returnBlock = new BitString(0);
 		
-		BitString[] reversedKeySchedule = reverseKeySchedule(keySchedule);
+		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
+		
+		//reverse key schedule for decryption
+		for(int i = 0; i < keySchedule.length; i++) {
+			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
+		}
 		
 		if (mode.contentEquals("ECB")) {
 			//Electronic CodeBook
@@ -327,16 +332,6 @@ public class DES {
 
 	public void setRand() {
 		this.rand = new Random(System.currentTimeMillis());
-	}
-	
-	private BitString[] reverseKeySchedule(BitString[] keySchedule) {
-		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
-		
-		//reverse key schedule for decryption
-		for(int i = 0; i < keySchedule.length; i++) {
-			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
-		}
-		return reversedKeySchedule;
 	}
 	
 	

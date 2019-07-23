@@ -2,6 +2,8 @@ import java.util.Random;
 
 public class DES {
 	private byte[] key;
+	private byte[] key2;
+	private byte[] key3;
 	private Random rand;
 	private BitString[] keySchedule;
 	private String mode;
@@ -45,6 +47,10 @@ public class DES {
 		setKey(key);
 		keySchedule = DESKey.getKeySchedule(this.key);
 		
+		if (mode.equals("3DES")) {
+			key2 = inVector.getBytes();
+			key3 = DESKey.genKey();
+		}
 	}
 
 	
@@ -108,7 +114,14 @@ public class DES {
 				
 				returnBlock = returnBlock.concat(ciphertext);
 			}
-		} 
+		} else if (mode.equals("3DES")) {
+			BitString[] keySchedule2 = DESKey.getKeySchedule(key2);
+			BitString[] keySchedule3 = DESKey.getKeySchedule(key3);
+			
+			for (BitString block : bitBlocks) {
+				BitString ciphertext = processBlock(block, keySchedule);
+			}
+		}
 		
 		return returnBlock;
 	}

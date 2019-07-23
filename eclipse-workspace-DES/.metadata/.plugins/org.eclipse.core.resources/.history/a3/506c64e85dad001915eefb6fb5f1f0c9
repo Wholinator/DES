@@ -19,7 +19,7 @@ public class Driver {
 		byte[][] keyList = {key, key2, key3};
 		BitString[] ivList = {new BitString(IV), new BitString(IV2), new BitString(IV3)};
 		
-		TDES tdes = new TDES("CBC", keyList, ivList);
+		TDES tdes = new TDES("ECB", keyList, ivList);
 		
 		String cleartext = "t";
 		
@@ -27,7 +27,7 @@ public class Driver {
 		
 		BitString cipher = tdes.encrypt(cleartext);
 		
-		//System.out.println(cipher.toString());
+		System.out.println(cipher.toString());
 		
 		String plain = tdes.decrypt(cipher);
 		
