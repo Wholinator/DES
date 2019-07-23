@@ -482,3 +482,6 @@ org.eclipse.ecf.filetransfer.BrowseFileTransferException: Proxy Authentication R
 
 !ENTRY org.eclipse.jdt.debug 2 0 2019-07-22 12:30:56.771
 !MESSAGE Unable to find location of java.lang.Thread.setName() in debuggee JVM, for type java.lang.Thread
+
+!ENTRY org.eclipse.jdt.debug 2 0 2019-07-23 09:31:39.992
+!MESSAGE Unable to find location of java.lang.Thread.setName() in debuggee JVM, for type java.lang.Thread

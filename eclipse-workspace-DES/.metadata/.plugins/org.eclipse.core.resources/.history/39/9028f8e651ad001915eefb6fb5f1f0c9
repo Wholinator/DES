@@ -2,7 +2,6 @@ import java.util.Random;
 
 public class DES {
 	private byte[] key;
-	private byte[] key2;
 	private Random rand;
 	private BitString[] keySchedule;
 	private String mode;
@@ -67,48 +66,22 @@ public class DES {
 			for (BitString block : bitBlocks) {
 				block = block.xor(chain);
 				
-				BitString ciphertext = processBlock(block, keySchedule);
+				BitString cipherText = processBlock(block, keySchedule);
 				
-				returnBlock = returnBlock.concat(ciphertext);
-				chain = ciphertext;
+				returnBlock = returnBlock.concat(cipherText);
+				chain = cipherText;
 			}
 		} else if (mode.equals("CFB")) {
-			//Cipher Feedback
 			BitString chain = inVector;
 			
 			for (BitString block : bitBlocks) {
-				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
+				BitString cipherText = processBlock(chain, keySchedule).xor(block);
 				
-				chain = ciphertext;
-				returnBlock = returnBlock.concat(ciphertext);
-			}
-		} else if (mode.equals("OFB")) {
-			//Output Feedback
-			BitString chain = inVector;
-			
-			for (BitString block: bitBlocks) {
-				BitString ciphertext = processBlock(chain, keySchedule);
-				chain = ciphertext;
-				
-				ciphertext = ciphertext.xor(block);
-				
-				returnBlock = returnBlock.concat(ciphertext);
-			}
-		} else if (mode.equals("CTR")) {
-			//counter mode
-			int counter = 0;
-			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
-			
-			for (BitString block : bitBlocks) {
-				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
-				
-				counter++;
-				
-				chain = chain.subString(0, 56).concat(new BitString((byte) counter));
-				
-				returnBlock = returnBlock.concat(ciphertext);
+				chain = cipherText;
+				returnBlock.concat(cipherText);
 			}
 		}
+		
 		
 		return returnBlock;
 	}
@@ -142,41 +115,12 @@ public class DES {
 				chain = block;
 			}
 		} else if (mode.equals("CFB")) {
-			//Cipher Feedback
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				BitString cleartext = processBlock(chain, keySchedule).xor(block);
+				BitString cleartext = processBlock(chain, reversedKeySchedule).xor(block);
 				
 				chain = block;
-				
-				returnBlock = returnBlock.concat(cleartext);
-			}
-		} else if (mode.equals("OFB")) {
-			//Output Feedback
-			BitString chain = inVector;
-			
-			for (BitString block : blocks) {
-				BitString cleartext = processBlock(chain, keySchedule);
-				
-				chain = cleartext;
-				
-				cleartext = cleartext.xor(block);
-				
-				returnBlock = returnBlock.concat(cleartext);
-			}
-		} else if (mode.equals("CTR")) {
-			//counter mode
-			int counter = 0;
-			
-			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
-			
-			for (BitString block : blocks) {
-				BitString cleartext = processBlock(chain, keySchedule).xor(block);
-				
-				counter++;
-				
-				chain = chain.subString(0, 56).concat(new BitString((byte) counter));
 				
 				returnBlock = returnBlock.concat(cleartext);
 			}

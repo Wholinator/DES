@@ -47,7 +47,7 @@ public class BitString {
 		this.length = bits.length;
 	}
 	
-	//single byte bitstring constructor
+	//
 	public BitString(byte b) {
 		bits = initBits(new Bit[8]);
 		

@@ -95,7 +95,6 @@ public class DES {
 				returnBlock = returnBlock.concat(ciphertext);
 			}
 		} else if (mode.equals("CTR")) {
-			//counter mode
 			int counter = 0;
 			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
 			
@@ -166,7 +165,6 @@ public class DES {
 				returnBlock = returnBlock.concat(cleartext);
 			}
 		} else if (mode.equals("CTR")) {
-			//counter mode
 			int counter = 0;
 			
 			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));

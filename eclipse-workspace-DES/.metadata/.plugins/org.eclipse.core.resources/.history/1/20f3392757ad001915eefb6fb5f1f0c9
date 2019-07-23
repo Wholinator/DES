@@ -47,16 +47,13 @@ public class BitString {
 		this.length = bits.length;
 	}
 	
-	//single byte bitstring constructor
 	public BitString(byte b) {
 		bits = initBits(new Bit[8]);
 		
 		for (int i = 0; i < 8; i++) {
-			//right shift i bits, and with 1 to retrieve bit value at index i from right side
 			int value = b >> i & 1;
 		
-			//set bits from right to left cause that's how we read them
-			setBit(8-i-1, value);
+			setBit(i, value);
 		}
 		this.length = 8;
 	}
