@@ -94,7 +94,7 @@ class BitStringTest {
 		
 		BitString c = new BitString(byteArray);
 		
-		assertTrue(b.concat(c).toString().equals("001100010000001000000001"));
+		assertTrue(b.append(c).toString().equals("001100010000001000000001"));
 	}
 
 	@Test

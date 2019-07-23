@@ -115,7 +115,7 @@ public class BitString {
 	}
 	
 	//appends two BitStrings together
-	public BitString concat(BitString bitString) {
+	public BitString append(BitString bitString) {
 		
 		BitString returnBits = new BitString(length + bitString.length);
 		

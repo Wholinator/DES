@@ -1,35 +1,184 @@
 
 public class TDES extends DES{
-	DES des1, des2, des3;
+	DESKey[] key = new DESKey[3];
+	BitString inVectors;
+	String mode;
 	
 	public TDES(byte[][] keyList) {
-		des1 = new DES(keyList[0]);
-		des2 = new DES(keyList[1]);
-		des3 = new DES(keyList[2]);
+		key[0] = new DESKey(keyList[0]);
+		key[1] = new DESKey(keyList[1]); 
+		key[2] = new DESKey(keyList[2]);
 	}
 	
 	public TDES() {
-		des1 = new DES();
-		des2 = new DES();
-		des3 = new DES();
+		key[0] = new DESKey();
+		key[1] = new DESKey();
+		key[2] = new DESKey();
 	}
 	
 	//MODE initializer
-	public TDES(String mode, byte[][] keyList, BitString[] inVectors) {
-		des1 = new DES(mode, keyList[0], inVectors[0]);
-		des2 = new DES(mode, keyList[1], inVectors[1]);
-		des3 = new DES(mode, keyList[2], inVectors[2]);
+	public TDES(String mode, byte[][] keyList, BitString inVector) {
+		this.mode = mode;
+		
+		key[0] = new DESKey(keyList[0]);
+		key[1] = new DESKey(keyList[1]); 
+		key[2] = new DESKey(keyList[2]);
+		
+		this.inVector = inVector;
 	}
 	
+	//encrypts plaintext
 	public BitString encrypt(String plaintext) {
-		BitString ciphertext = des3.encrypt(des2.decrypt(des1.encrypt(plaintext)));
+		BitString[] bitBlocks = getBitBlocks(plaintext);
+		
+		BitString returnBlock = new BitString(0);
+		
+		
+		if (mode.equals("ECB")) {
+			//Electronic Code Book
+			
+			for (BitString block : bitBlocks) {
+				
+				BitString ciphertext = tripleEncrypt(block);
+				
+				returnBlock = returnBlock.append(ciphertext);
+				
+			}
+		} else if (mode.contentEquals("CBC")) {
+			//Cipher Block Chaining
+			BitString chain = inVector;
+			
+			for (BitString block : bitBlocks) {
+				block = block.xor(chain);
+				
+				BitString ciphertext = tripleEncrypt(block);
+				
+				returnBlock = returnBlock.append(ciphertext);
+				chain = ciphertext;
+			}
+		} else if (mode.equals("CFB")) {
+			//Cipher Feedback
+			BitString chain = inVector;
+			
+			for (BitString block : bitBlocks) {
+				BitString ciphertext = tripleEncrypt(chain).xor(block);
+				
+				chain = ciphertext;
+				returnBlock = returnBlock.append(ciphertext);
+			}
+		} else if (mode.equals("OFB")) {
+			//Output Feedback
+			BitString chain = inVector;
+			
+			for (BitString block: bitBlocks) {
+				BitString ciphertext = tripleEncrypt(chain);
+				chain = ciphertext;
+				
+				ciphertext = ciphertext.xor(block);
+				
+				returnBlock = returnBlock.append(ciphertext);
+			}
+		} else if (mode.equals("CTR")) {
+			//counter mode
+			int counter = 0;
+			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
+			
+			for (BitString block : bitBlocks) {
+				BitString ciphertext = tripleEncrypt(chain).xor(block);
+				
+				counter++;
+				
+				chain = chain.subString(0, 56).append(new BitString((byte) counter));
+				
+				returnBlock = returnBlock.append(ciphertext);
+			}
+		} 
+		
+		return returnBlock;
+	}
+	
+	public String decrypt(BitString ciphertext) {
+		BitString[] blocks = ciphertext.getBlocks(64);
+		
+		BitString returnBlock = new BitString(0);
+		
+		if (mode.contentEquals("ECB")) {
+			//Electronic CodeBook
+			for (BitString block : blocks) {
+				returnBlock = returnBlock.append(tripleDecrypt(block));
+			}
+		} else if (mode.equals("CBC")) {
+			//Cipher Block Chaining
+			BitString chain = inVector;
+			
+			for (BitString block : blocks) {
+				BitString cleartext = tripleDecrypt(block);
+				
+				cleartext = cleartext.xor(chain);
+				returnBlock = returnBlock.append(cleartext);
+				
+				chain = block;
+			}
+		} else if (mode.equals("CFB")) {
+			//Cipher Feedback
+			BitString chain = inVector;
+			
+			for (BitString block : blocks) {
+				BitString cleartext = tripleEncrypt(chain).xor(block);
+				
+				chain = block;
+				
+				returnBlock = returnBlock.append(cleartext);
+			}
+		} else if (mode.equals("OFB")) {
+			//Output Feedback
+			BitString chain = inVector;
+			
+			for (BitString block : blocks) {
+				BitString cleartext = tripleEncrypt(chain);
+				
+				chain = cleartext;
+				
+				cleartext = cleartext.xor(block);
+				
+				returnBlock = returnBlock.append(cleartext);
+			}
+		} else if (mode.equals("CTR")) {
+			//counter mode
+			int counter = 0;
+			
+			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
+			
+			for (BitString block : blocks) {
+				BitString cleartext = tripleEncrypt(chain).xor(block);
+				
+				counter++;
+				
+				chain = chain.subString(0, 56).append(new BitString((byte) counter));
+				
+				returnBlock = returnBlock.append(cleartext);
+			}
+		}
+		
+		return returnBlock.toString();
+	}
+	
+	private BitString tripleEncrypt(BitString block) {
+		//3 rounds of encryption
+		BitString ciphertext = processBlock(block, key[0].getKeySchedule());
+		ciphertext = processBlock(ciphertext, key[1].getReverseKeySchedule());
+		ciphertext = processBlock(ciphertext, key[2].getKeySchedule());
 		
 		return ciphertext;
 	}
 	
-	public String decrypt(BitString ciphertext) {
-		String cleartext = des1.decrypt(des2.encrypt(des3.decrypt(ciphertext)));
+	private BitString tripleDecrypt(BitString block) {
+		BitString plaintext = processBlock(block, key[2].getReverseKeySchedule());
+		plaintext = processBlock(plaintext, key[1].getKeySchedule());
+		plaintext = processBlock(plaintext, key[0].getReverseKeySchedule());
 		
-		return cleartext;
+		return plaintext;
 	}
+	
+	
 }

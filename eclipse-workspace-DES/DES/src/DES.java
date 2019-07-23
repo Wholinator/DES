@@ -1,56 +1,35 @@
 import java.util.Random;
 
 public class DES {
-	private byte[] key;
+	private DESKey key;
 	private Random rand;
-	private BitString[] keySchedule;
 	private String mode;
-	private BitString inVector;
+	protected BitString inVector;
 	
-	public DES(byte[] key) {
+	public DES(byte[] dkey) {
 		setRand();
-		setKey(key);
-		keySchedule = DESKey.getKeySchedule(this.key);
-		mode = "ECB";
-	}
-	
-	public DES(String key) {
-		setRand();
-		
-		byte[] b = key.getBytes();
-		if (b.length == 7) {
-			setKey(b);
-		} else {
-			System.out.println("Key not valid length: Generating new key");
-			setKey(DESKey.genKey());
-		}
-		
-		keySchedule = DESKey.getKeySchedule(this.key);
+		key = new DESKey(dkey);
 		mode = "ECB";
 	}
 	
 	public DES() {
-		setRand();
-		setKey(DESKey.genKey());
-		keySchedule = DESKey.getKeySchedule(this.key);
+		key = new DESKey();
 		mode = "ECB";
 	}
 	
 	//MODE initializer
-	public DES(String mode, byte[] key, BitString inVector) {
+	public DES(String mode, byte[] dkey, BitString inVector) {
 		this.mode = mode;
 		this.inVector = inVector;
 		
-		setRand();
-		setKey(key);
-		keySchedule = DESKey.getKeySchedule(this.key);
-		
+		key = new DESKey(dkey);
 	}
 
 	
 	//encrypts plaintext
 	public BitString encrypt(String plaintext) {
 		BitString[] bitBlocks = getBitBlocks(plaintext);
+		BitString[] keySchedule = key.getKeySchedule();
 		
 		BitString returnBlock = new BitString(0);
 		
@@ -58,7 +37,7 @@ public class DES {
 		if (mode.equals("ECB")) {
 			//Electronic Code Book
 			for (int i = 0; i < bitBlocks.length; i++) {
-				returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
+				returnBlock = returnBlock.append(processBlock(bitBlocks[i], keySchedule));
 			}
 		} else if (mode.contentEquals("CBC")) {
 			//Cipher Block Chaining
@@ -69,7 +48,7 @@ public class DES {
 				
 				BitString ciphertext = processBlock(block, keySchedule);
 				
-				returnBlock = returnBlock.concat(ciphertext);
+				returnBlock = returnBlock.append(ciphertext);
 				chain = ciphertext;
 			}
 		} else if (mode.equals("CFB")) {
@@ -80,7 +59,7 @@ public class DES {
 				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
 				
 				chain = ciphertext;
-				returnBlock = returnBlock.concat(ciphertext);
+				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("OFB")) {
 			//Output Feedback
@@ -92,21 +71,21 @@ public class DES {
 				
 				ciphertext = ciphertext.xor(block);
 				
-				returnBlock = returnBlock.concat(ciphertext);
+				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
-			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
+			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : bitBlocks) {
 				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
 				
 				counter++;
 				
-				chain = chain.subString(0, 56).concat(new BitString((byte) counter));
+				chain = chain.subString(0, 56).append(new BitString((byte) counter));
 				
-				returnBlock = returnBlock.concat(ciphertext);
+				returnBlock = returnBlock.append(ciphertext);
 			}
 		} 
 		
@@ -115,14 +94,16 @@ public class DES {
 	
 	public String decrypt(BitString ciphertext) {
 		BitString[] blocks = ciphertext.getBlocks(64);
+		BitString[] keySchedule = key.getKeySchedule();
+		
 		BitString returnBlock = new BitString(0);
 		
-		BitString[] reversedKeySchedule = reverseKeySchedule(keySchedule);
+		BitString[] reversedKeySchedule = key.getReverseKeySchedule();
 		
 		if (mode.contentEquals("ECB")) {
 			//Electronic CodeBook
 			for (int i = 0; i < blocks.length; i++) {
-				returnBlock = returnBlock.concat(processBlock(blocks[i], reversedKeySchedule));
+				returnBlock = returnBlock.append(processBlock(blocks[i], reversedKeySchedule));
 			}
 		} else if (mode.equals("CBC")) {
 			//Cipher Block Chaining
@@ -132,7 +113,7 @@ public class DES {
 				BitString cleartext = processBlock(block, reversedKeySchedule);
 				
 				cleartext = cleartext.xor(chain);
-				returnBlock = returnBlock.concat(cleartext);
+				returnBlock = returnBlock.append(cleartext);
 				
 				chain = block;
 			}
@@ -145,7 +126,7 @@ public class DES {
 				
 				chain = block;
 				
-				returnBlock = returnBlock.concat(cleartext);
+				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("OFB")) {
 			//Output Feedback
@@ -158,27 +139,25 @@ public class DES {
 				
 				cleartext = cleartext.xor(block);
 				
-				returnBlock = returnBlock.concat(cleartext);
+				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
 			
-			BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
+			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : blocks) {
 				BitString cleartext = processBlock(chain, keySchedule).xor(block);
 				
 				counter++;
 				
-				chain = chain.subString(0, 56).concat(new BitString((byte) counter));
+				chain = chain.subString(0, 56).append(new BitString((byte) counter));
 				
-				returnBlock = returnBlock.concat(cleartext);
+				returnBlock = returnBlock.append(cleartext);
 			}
 		}
 		
-
-
 		return returnBlock.toString();
 	}
 	
@@ -217,7 +196,7 @@ public class DES {
 			blockR = tempBlockR;
 		}
 		
-		block = blockR.concat(blockL);
+		block = blockR.append(blockL);
 		
 		block = block.applyPermutation(final_permutation);
 		
@@ -255,7 +234,7 @@ public class DES {
 			int start = i * 6;
 			int end = start + 6;
 			
-			output = output.concat(sBox(block.subString(start, end), i+1));
+			output = output.append(sBox(block.subString(start, end), i+1));
 		}
 		
 		//pbox
@@ -295,7 +274,7 @@ public class DES {
 	}
 	
 	//get an array of 64 bit blocks from plaintext
-	private BitString[] getBitBlocks(String plaintext) {
+	protected BitString[] getBitBlocks(String plaintext) {
 		byte[][] byteBlocks = getByteBlocks(plaintext);
 		
 		int length = byteBlocks.length;
@@ -312,13 +291,13 @@ public class DES {
 
 	
 	//Getter: key
-	public byte[] getKey() {
+	public DESKey getKey() {
 		return key;
 	}
 
 	//Setter: key
-	public void setKey(byte[] key) {
-		this.key = key;
+	public void setKey(byte[] dkey) {
+		this.key = new DESKey(dkey);
 	}
 	
 	public Random getRand() {
@@ -329,22 +308,14 @@ public class DES {
 		this.rand = new Random(System.currentTimeMillis());
 	}
 	
-	private BitString[] reverseKeySchedule(BitString[] keySchedule) {
-		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
-		
-		//reverse key schedule for decryption
-		for(int i = 0; i < keySchedule.length; i++) {
-			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
-		}
-		return reversedKeySchedule;
-	}
+
 	
 	
 	private BitString sBox(BitString input, int boxNum) {
 		//get the outside two bits
 		BitString b1 = input.subString(0,  1);
 		BitString b2 = input.subString(input.length-1, input.length);
-		byte ends = b1.concat(b2).getBytes()[0];
+		byte ends = b1.append(b2).getBytes()[0];
 		
 		//get the inside 4 bits
 		byte middle = input.subString(1, 5).getBytes()[0];

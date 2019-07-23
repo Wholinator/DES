@@ -1,0 +1,108 @@
+
+public class TDES extends DES{
+	DESKey[] key = new DESKey[3];
+	BitString[] inVectors = new BitString[3];
+	String mode;
+	
+	public TDES(byte[][] keyList) {
+		key[0] = new DESKey(keyList[0]);
+		key[1] = new DESKey(keyList[1]); 
+		key[2] = new DESKey(keyList[2]);
+	}
+	
+	public TDES() {
+		key[0] = new DESKey();
+		key[1] = new DESKey();
+		key[2] = new DESKey();
+	}
+	
+	//MODE initializer
+	public TDES(String mode, byte[][] keyList, BitString[] inVectors) {
+		this.mode = mode;
+		
+		key[0] = new DESKey(keyList[0]);
+		key[1] = new DESKey(keyList[1]); 
+		key[2] = new DESKey(keyList[2]);
+		
+		this.inVectors[0] = inVectors[0]; 
+		this.inVectors[1] = inVectors[1]; 
+		this.inVectors[2] = inVectors[2]; 
+	}
+	
+//	public BitString encrypt(String plaintext) {
+//		BitString ciphertext = des3.encrypt(des2.decrypt(des1.encrypt(plaintext)));
+//		
+//		return ciphertext;
+//	}
+	
+	//encrypts plaintext
+		public BitString encrypt(String plaintext) {
+			BitString[] bitBlocks = getBitBlocks(plaintext);
+			
+			BitString returnBlock = new BitString(0);
+			
+			
+			if (mode.equals("ECB")) {
+				//Electronic Code Book
+				for (int i = 0; i < bitBlocks.length; i++) {
+					returnBlock = returnBlock.concat(processBlock(bitBlocks[i], keySchedule));
+				}
+			} else if (mode.contentEquals("CBC")) {
+				//Cipher Block Chaining
+				BitString chain = inVector;
+				
+				for (BitString block : bitBlocks) {
+					block = block.xor(chain);
+					
+					BitString ciphertext = processBlock(block, keySchedule);
+					
+					returnBlock = returnBlock.concat(ciphertext);
+					chain = ciphertext;
+				}
+			} else if (mode.equals("CFB")) {
+				//Cipher Feedback
+				BitString chain = inVector;
+				
+				for (BitString block : bitBlocks) {
+					BitString ciphertext = processBlock(chain, keySchedule).xor(block);
+					
+					chain = ciphertext;
+					returnBlock = returnBlock.concat(ciphertext);
+				}
+			} else if (mode.equals("OFB")) {
+				//Output Feedback
+				BitString chain = inVector;
+				
+				for (BitString block: bitBlocks) {
+					BitString ciphertext = processBlock(chain, keySchedule);
+					chain = ciphertext;
+					
+					ciphertext = ciphertext.xor(block);
+					
+					returnBlock = returnBlock.concat(ciphertext);
+				}
+			} else if (mode.equals("CTR")) {
+				//counter mode
+				int counter = 0;
+				BitString chain = inVector.subString(0, 56).concat(new BitString((byte) counter));
+				
+				for (BitString block : bitBlocks) {
+					BitString ciphertext = processBlock(chain, keySchedule).xor(block);
+					
+					counter++;
+					
+					chain = chain.subString(0, 56).concat(new BitString((byte) counter));
+					
+					returnBlock = returnBlock.concat(ciphertext);
+				}
+			} 
+			
+			return returnBlock;
+		}
+	
+	public String decrypt(BitString ciphertext) {
+		String cleartext = des1.decrypt(des2.encrypt(des3.decrypt(ciphertext)));
+		
+		return cleartext;
+	}
+}

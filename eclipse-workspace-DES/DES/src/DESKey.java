@@ -5,9 +5,20 @@ import java.util.Random;
 public class DESKey {
 	
 	private static Random rand = new Random(System.currentTimeMillis());
+	private byte[] key;
+	private BitString[] keySchedule;
 	
 	
-	public static BitString[] getKeySchedule(byte[] key) {
+	public DESKey(byte[] key) {
+		this.key = key;
+		this.keySchedule = genKeySchedule(this.key);
+	}
+	public DESKey() {
+		this.key = genKey();
+		this.keySchedule = genKeySchedule(this.key);
+	}
+	
+	public static BitString[] genKeySchedule(byte[] key) {
 		int[] initial_permutation = {57, 49, 41, 33, 25, 17,  9,
 									 1,  58, 50, 42, 34, 26, 18,
 									 10, 2,  59, 51, 43, 35, 27,
@@ -52,7 +63,7 @@ public class DESKey {
 				p1_Key_r.leftShift();
 			}
 			
-			BitString tempKey = p1_Key_l.concat(p1_Key_r);
+			BitString tempKey = p1_Key_l.append(p1_Key_r);
 			
 			BitString permutedKey = tempKey.applyPermutation(second_permutation);
 			
@@ -62,7 +73,28 @@ public class DESKey {
 		return keySchedule;
 	}
 
+	public byte[] getKey() {
+		return this.key;
+	}
 
+	public void setKey(byte[] key) {
+		this.key = key;
+	}
+	
+	public BitString[] getKeySchedule() {
+		return this.keySchedule;
+	}
+	
+	public BitString[] getReverseKeySchedule() {
+		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
+		
+		//reverse key schedule for decryption
+		for(int i = 0; i < keySchedule.length; i++) {
+			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
+		}
+		return reversedKeySchedule;
+	}
+	
 	public static byte[] genKey() {
 		byte[] bKey = new byte[8];
 		rand.nextBytes(bKey);
