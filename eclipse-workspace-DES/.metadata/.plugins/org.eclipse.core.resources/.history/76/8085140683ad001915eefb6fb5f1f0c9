@@ -187,12 +187,10 @@ public class BitString {
 		return byteArray;
 	}
 	
-	//splits BitString into BitString array of BitStrings blockLength long
 	public BitString[] getBlocks(int blockLength) {
 		int numBlocks = length / blockLength;
 		BitString[] blocks = new BitString[numBlocks]; 
 		
-		//if string divides evenly into blockLength
 		if (length % blockLength == 0) {
 			for (int i = 0; i < numBlocks; i++) {
 				blocks[i] = subString((i * 64), (i+1) * 64);
@@ -206,7 +204,6 @@ public class BitString {
 		return bits;
 	}
 
-	@SuppressWarnings("unused")
 	private void setBits(Bit[] bits) {
 		this.bits = bits;
 	}
@@ -223,7 +220,7 @@ public class BitString {
 		return bits[index];
 	}
 	
-	//equality checker
+	
 	public boolean equals(BitString bitString) {
 		boolean equals = true;
 		

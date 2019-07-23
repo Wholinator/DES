@@ -3,15 +3,16 @@ import java.util.Random;
 
 
 public class DESKey {
+	
 	private static Random rand = new Random(System.currentTimeMillis());
 	private byte[] key;
 	private BitString[] keySchedule;
+	
 	
 	public DESKey(byte[] key) {
 		this.key = key;
 		this.keySchedule = genKeySchedule(this.key);
 	}
-	
 	public DESKey() {
 		this.key = genKey();
 		this.keySchedule = genKeySchedule(this.key);
@@ -49,7 +50,7 @@ public class DESKey {
 		
 		for (int i = 0; i < 16; i++) {
 			
-			//circular shift our split keys
+			//shift our split keys
 			if (i == 0 || i == 1 || i == 8 || i == 15) {
 				//one shift
 				p1_Key_l.leftShift();

@@ -36,37 +36,29 @@ public class DES {
 		
 		if (mode.equals("ECB")) {
 			//Electronic Code Book
-			for (BitString block : bitBlocks) {
-				//encrypt each block independently and append to return string
-				returnBlock = returnBlock.append(processBlock(block, keySchedule));
+			for (int i = 0; i < bitBlocks.length; i++) {
+				returnBlock = returnBlock.append(processBlock(bitBlocks[i], keySchedule));
 			}
 		} else if (mode.contentEquals("CBC")) {
 			//Cipher Block Chaining
 			BitString chain = inVector;
 			
 			for (BitString block : bitBlocks) {
-				//xor block with initvector
 				block = block.xor(chain);
 				
-				//encrypt the result
 				BitString ciphertext = processBlock(block, keySchedule);
 				
-				//pass that result on to the next blocks initVector
-				chain = ciphertext;
-				//and append
 				returnBlock = returnBlock.append(ciphertext);
+				chain = ciphertext;
 			}
 		} else if (mode.equals("CFB")) {
 			//Cipher Feedback
 			BitString chain = inVector;
 			
 			for (BitString block : bitBlocks) {
-				//encrypt the initVector and xor with block
 				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
 				
-				//pass ciphertext on as next blocks initVector
 				chain = ciphertext;
-				//and append
 				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("OFB")) {
@@ -74,31 +66,25 @@ public class DES {
 			BitString chain = inVector;
 			
 			for (BitString block: bitBlocks) {
-				//encrypt the initVector
 				BitString ciphertext = processBlock(chain, keySchedule);
-				//and pass on as the next initVector
 				chain = ciphertext;
 				
-				//xor encrypted initVector with the block
 				ciphertext = ciphertext.xor(block);
-				//and append
+				
 				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
-			
-			//take initVector and replace last 8 bits with a counter
 			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : bitBlocks) {
-				//encrypt the counter and xor with the block
 				BitString ciphertext = processBlock(chain, keySchedule).xor(block);
 				
-				//increment the counter
 				counter++;
+				
 				chain = chain.subString(0, 56).append(new BitString((byte) counter));
-				//and append
+				
 				returnBlock = returnBlock.append(ciphertext);
 			}
 		} 
@@ -116,35 +102,30 @@ public class DES {
 		
 		if (mode.contentEquals("ECB")) {
 			//Electronic CodeBook
-			for (BitString block : blocks) {
-				//decrypt each block independently and append
-				returnBlock = returnBlock.append(processBlock(block, reversedKeySchedule));
+			for (int i = 0; i < blocks.length; i++) {
+				returnBlock = returnBlock.append(processBlock(blocks[i], reversedKeySchedule));
 			}
 		} else if (mode.equals("CBC")) {
 			//Cipher Block Chaining
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//decrypt the block
 				BitString cleartext = processBlock(block, reversedKeySchedule);
-				//and xor with the initvector
+				
 				cleartext = cleartext.xor(chain);
-				//pass original block on as the initVector of next block
-				chain = block;
-				//and append
 				returnBlock = returnBlock.append(cleartext);
+				
+				chain = block;
 			}
 		} else if (mode.equals("CFB")) {
 			//Cipher Feedback
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//re-encrypt the initVector and xor with the ciphertext
 				BitString cleartext = processBlock(chain, keySchedule).xor(block);
 				
-				//pass ciphertext on as next initVector
 				chain = block;
-				//and append
+				
 				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("OFB")) {
@@ -152,32 +133,27 @@ public class DES {
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//re-encrypt the initVector
 				BitString cleartext = processBlock(chain, keySchedule);
-				//and pass it on as the next initVector
+				
 				chain = cleartext;
 				
-				//xor encrypted initvector with block
 				cleartext = cleartext.xor(block);
-				//and append
+				
 				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
 			
-			//replace last 8 bits of initVector with a counter
 			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : blocks) {
-				//encrypt the counter and xor with the ciphertext
 				BitString cleartext = processBlock(chain, keySchedule).xor(block);
 				
-				//increment the counter
 				counter++;
+				
 				chain = chain.subString(0, 56).append(new BitString((byte) counter));
 				
-				//and append
 				returnBlock = returnBlock.append(cleartext);
 			}
 		}
@@ -208,7 +184,6 @@ public class DES {
 		
 		block = block.applyPermutation(initial_permutation);
 		
-		//split block in two for fiestel scheme
 		BitString blockL = block.subString(0,  32);
 		BitString blockR = block.subString(32, 64);
 		

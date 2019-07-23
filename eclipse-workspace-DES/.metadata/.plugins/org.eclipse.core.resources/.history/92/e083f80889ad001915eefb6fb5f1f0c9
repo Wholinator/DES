@@ -49,6 +49,7 @@ class BitStringTest {
 
 	@Test
 	void testBitStringInt() {
+		int length = 5;
 		BitString b = new BitString(5);
 		
 		assertEquals(5, b.length);
@@ -120,9 +121,21 @@ class BitStringTest {
 		
 		b = new BitString(byteArray);
 		
+		byte[] bytes = b.getBytes();
+		
 		assertTrue(Arrays.equals(b.getBytes(), byteArray));
 	}
 
+	@Test
+	void testGetBlocks() {
+		byte[] byteArray = "testing".getBytes();
+		
+		BitString b = new BitString(byteArray);
+		
+		BitString[] block = b.getBlocks(8);
+		
+		
+	}
 
 	@Test
 	void testGetBits() {

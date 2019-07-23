@@ -4,14 +4,12 @@ public class TDES extends DES{
 	BitString inVectors;
 	String mode;
 	
-	//create DESKey array from keyList
 	public TDES(byte[][] keyList) {
 		key[0] = new DESKey(keyList[0]);
 		key[1] = new DESKey(keyList[1]); 
 		key[2] = new DESKey(keyList[2]);
 	}
 	
-	//generate DESKey list
 	public TDES() {
 		key[0] = new DESKey();
 		key[1] = new DESKey();
@@ -40,23 +38,22 @@ public class TDES extends DES{
 			//Electronic Code Book
 			
 			for (BitString block : bitBlocks) {
-				//encrypt every block individually
+				
 				BitString ciphertext = tripleEncrypt(block);
+				
 				returnBlock = returnBlock.append(ciphertext);
+				
 			}
 		} else if (mode.contentEquals("CBC")) {
 			//Cipher Block Chaining
 			BitString chain = inVector;
 			
 			for (BitString block : bitBlocks) {
-				//xor initVector with block
 				block = block.xor(chain);
 				
-				//encrypt xor'd block and append as ciphertext
 				BitString ciphertext = tripleEncrypt(block);
-				returnBlock = returnBlock.append(ciphertext);
 				
-				//pass ciphertext on as initVector for next block
+				returnBlock = returnBlock.append(ciphertext);
 				chain = ciphertext;
 			}
 		} else if (mode.equals("CFB")) {
@@ -64,43 +61,35 @@ public class TDES extends DES{
 			BitString chain = inVector;
 			
 			for (BitString block : bitBlocks) {
-				//encrypt initVector and xor with block to get ciphertext
 				BitString ciphertext = tripleEncrypt(chain).xor(block);
 				
-				//append ciphertext to return string and pass it on as initVector to next block
-				returnBlock = returnBlock.append(ciphertext);
 				chain = ciphertext;
+				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("OFB")) {
 			//Output Feedback
 			BitString chain = inVector;
 			
 			for (BitString block: bitBlocks) {
-				//encrypt the initVector and pass it on as the next initVector
 				BitString ciphertext = tripleEncrypt(chain);
 				chain = ciphertext;
 				
-				//xor ciphertext with block
 				ciphertext = ciphertext.xor(block);
-				//and add to ciphertext string
+				
 				returnBlock = returnBlock.append(ciphertext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
-			
-			//create counter with the initVector and a counter for the last 8 bytes
 			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : bitBlocks) {
-				//encrypt the counter and xor with the block
 				BitString ciphertext = tripleEncrypt(chain).xor(block);
 				
-				//increment the counter
 				counter++;
+				
 				chain = chain.subString(0, 56).append(new BitString((byte) counter));
 				
-				//append ciphertext to the ciphertext string
 				returnBlock = returnBlock.append(ciphertext);
 			}
 		} 
@@ -110,12 +99,12 @@ public class TDES extends DES{
 	
 	public String decrypt(BitString ciphertext) {
 		BitString[] blocks = ciphertext.getBlocks(64);
+		
 		BitString returnBlock = new BitString(0);
 		
 		if (mode.contentEquals("ECB")) {
 			//Electronic CodeBook
 			for (BitString block : blocks) {
-				//decrypt each block individually
 				returnBlock = returnBlock.append(tripleDecrypt(block));
 			}
 		} else if (mode.equals("CBC")) {
@@ -123,14 +112,11 @@ public class TDES extends DES{
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//decrypt the block
 				BitString cleartext = tripleDecrypt(block);
 				
-				//xor decrypted with the initVector and append
 				cleartext = cleartext.xor(chain);
 				returnBlock = returnBlock.append(cleartext);
 				
-				//pass block as initVector to next block
 				chain = block;
 			}
 		} else if (mode.equals("CFB")) {
@@ -138,12 +124,10 @@ public class TDES extends DES{
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//encrypt the initVector and xor with block
 				BitString cleartext = tripleEncrypt(chain).xor(block);
 				
-				//pass current block as initVector for next block
 				chain = block;
-				//and append
+				
 				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("OFB")) {
@@ -151,32 +135,27 @@ public class TDES extends DES{
 			BitString chain = inVector;
 			
 			for (BitString block : blocks) {
-				//encrypt the initVector
 				BitString cleartext = tripleEncrypt(chain);
 				
-				//pass encrypted initVector as initVector for next block
 				chain = cleartext;
 				
-				//xor encrypted initVector with block
 				cleartext = cleartext.xor(block);
-				//and append
+				
 				returnBlock = returnBlock.append(cleartext);
 			}
 		} else if (mode.equals("CTR")) {
 			//counter mode
 			int counter = 0;
 			
-			//create initVector counter with last 8 bits of initVector replaced with counter
 			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : blocks) {
-				//encrypt inCounter and xor with block
 				BitString cleartext = tripleEncrypt(chain).xor(block);
 				
-				//increment the counter
 				counter++;
+				
 				chain = chain.subString(0, 56).append(new BitString((byte) counter));
-				//and append
+				
 				returnBlock = returnBlock.append(cleartext);
 			}
 		}
@@ -185,7 +164,7 @@ public class TDES extends DES{
 	}
 	
 	private BitString tripleEncrypt(BitString block) {
-		//encrypt with key 1, decrypt with key 2, encrypt with key 3
+		//3 rounds of encryption
 		BitString ciphertext = processBlock(block, key[0].getKeySchedule());
 		ciphertext = processBlock(ciphertext, key[1].getReverseKeySchedule());
 		ciphertext = processBlock(ciphertext, key[2].getKeySchedule());
@@ -194,7 +173,6 @@ public class TDES extends DES{
 	}
 	
 	private BitString tripleDecrypt(BitString block) {
-		//decrypt with key 3, encrypt with key 2, decrypt with key 1
 		BitString plaintext = processBlock(block, key[2].getReverseKeySchedule());
 		plaintext = processBlock(plaintext, key[1].getKeySchedule());
 		plaintext = processBlock(plaintext, key[0].getReverseKeySchedule());

@@ -3,7 +3,7 @@ public class BitString {
 	private Bit[] bits;
 	public int length;
 	
-	//single bit BitString constructor
+	
 	public BitString(Bit bit) {
 		bits = initBits(new Bit[1]);
 		setBit(0, bit);
@@ -13,8 +13,6 @@ public class BitString {
 	//bit array constructor
 	public BitString(Bit[] bits) {
 		this.bits = initBits(new Bit[bits.length]);
-		
-		//place every bit into BitArray
 		for (int i = 0; i < bits.length; i++) {
 			this.bits[i] = bits[i];
 		}
@@ -36,11 +34,11 @@ public class BitString {
 			int value = (bytes[byteNum] >> index) & 1;
 
 			//populate bitArray 
+			
 			//reverses order of bits in each individual byte because we read bits little-endian
 			int index_to_change = (((byteNum + 1) * 8) - index) - 1;
 			setBit(index_to_change, value);
 			
-			//every 8 bits, move to next byte
 			if (i % 8 == 0 && i != 0) {
 				byteNum++;
 			}
@@ -166,7 +164,6 @@ public class BitString {
 	
 	//transforms the bitstring into a byte array
 	public byte[] getBytes() {
-		//get number of bytes required to hold length bits
 		int byteLen = (int) Math.ceil(length / 8.0);
 		byte[] byteArray = new byte[byteLen];
 		
@@ -174,7 +171,7 @@ public class BitString {
 			//get substring of 8 bytes from right to left
 			BitString B;
 			
-			try {
+			try { //
 				B = subString(length - ((i+1) * 8), length - (i * 8));
 			} catch (ArrayIndexOutOfBoundsException e) {
 				B = subString(0, length- (i * 8));
@@ -187,12 +184,10 @@ public class BitString {
 		return byteArray;
 	}
 	
-	//splits BitString into BitString array of BitStrings blockLength long
 	public BitString[] getBlocks(int blockLength) {
 		int numBlocks = length / blockLength;
 		BitString[] blocks = new BitString[numBlocks]; 
 		
-		//if string divides evenly into blockLength
 		if (length % blockLength == 0) {
 			for (int i = 0; i < numBlocks; i++) {
 				blocks[i] = subString((i * 64), (i+1) * 64);
@@ -206,7 +201,6 @@ public class BitString {
 		return bits;
 	}
 
-	@SuppressWarnings("unused")
 	private void setBits(Bit[] bits) {
 		this.bits = bits;
 	}
@@ -223,7 +217,7 @@ public class BitString {
 		return bits[index];
 	}
 	
-	//equality checker
+	
 	public boolean equals(BitString bitString) {
 		boolean equals = true;
 		

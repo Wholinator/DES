@@ -166,18 +166,15 @@ public class DES {
 			//counter mode
 			int counter = 0;
 			
-			//replace last 8 bits of initVector with a counter
 			BitString chain = inVector.subString(0, 56).append(new BitString((byte) counter));
 			
 			for (BitString block : blocks) {
-				//encrypt the counter and xor with the ciphertext
 				BitString cleartext = processBlock(chain, keySchedule).xor(block);
 				
-				//increment the counter
 				counter++;
+				
 				chain = chain.subString(0, 56).append(new BitString((byte) counter));
 				
-				//and append
 				returnBlock = returnBlock.append(cleartext);
 			}
 		}

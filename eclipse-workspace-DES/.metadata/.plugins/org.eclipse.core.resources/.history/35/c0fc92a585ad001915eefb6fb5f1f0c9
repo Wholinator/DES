@@ -4,14 +4,12 @@ public class TDES extends DES{
 	BitString inVectors;
 	String mode;
 	
-	//create DESKey array from keyList
 	public TDES(byte[][] keyList) {
 		key[0] = new DESKey(keyList[0]);
 		key[1] = new DESKey(keyList[1]); 
 		key[2] = new DESKey(keyList[2]);
 	}
 	
-	//generate DESKey list
 	public TDES() {
 		key[0] = new DESKey();
 		key[1] = new DESKey();

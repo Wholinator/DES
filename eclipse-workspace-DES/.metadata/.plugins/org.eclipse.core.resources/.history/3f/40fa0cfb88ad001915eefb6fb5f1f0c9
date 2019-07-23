@@ -206,7 +206,6 @@ public class BitString {
 		return bits;
 	}
 
-	@SuppressWarnings("unused")
 	private void setBits(Bit[] bits) {
 		this.bits = bits;
 	}

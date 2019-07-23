@@ -3,21 +3,21 @@ import java.util.Random;
 
 
 public class DESKey {
+	
 	private static Random rand = new Random(System.currentTimeMillis());
 	private byte[] key;
 	private BitString[] keySchedule;
+	
 	
 	public DESKey(byte[] key) {
 		this.key = key;
 		this.keySchedule = genKeySchedule(this.key);
 	}
-	
 	public DESKey() {
 		this.key = genKey();
 		this.keySchedule = genKeySchedule(this.key);
 	}
 	
-	//expands a 64bit key into 16 64bit keys
 	public static BitString[] genKeySchedule(byte[] key) {
 		int[] initial_permutation = {57, 49, 41, 33, 25, 17,  9,
 									 1,  58, 50, 42, 34, 26, 18,
@@ -49,7 +49,7 @@ public class DESKey {
 		
 		for (int i = 0; i < 16; i++) {
 			
-			//circular shift our split keys
+			//shift our split keys
 			if (i == 0 || i == 1 || i == 8 || i == 15) {
 				//one shift
 				p1_Key_l.leftShift();
@@ -85,22 +85,22 @@ public class DESKey {
 		return this.keySchedule;
 	}
 	
-	//reverse key schedule for decryption
 	public BitString[] getReverseKeySchedule() {
 		BitString[] reversedKeySchedule = new BitString[keySchedule.length];
 		
+		//reverse key schedule for decryption
 		for(int i = 0; i < keySchedule.length; i++) {
 			reversedKeySchedule[i] = keySchedule[keySchedule.length - i - 1];
 		}
 		return reversedKeySchedule;
 	}
 	
-	//uses random to generate a new 64bit key
 	public static byte[] genKey() {
 		byte[] bKey = new byte[8];
 		rand.nextBytes(bKey);
 
 		return bKey;
 	}
-	
+
+
 }
